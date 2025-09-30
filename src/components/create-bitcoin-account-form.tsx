@@ -1,10 +1,10 @@
 "use client";
 
-import { useFormState, useFormStatus } from "react-dom";
+import { useActionState, useEffect, useRef } from "react";
+import { useFormStatus } from "react-dom";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { useEffect, useRef } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 import {
@@ -42,7 +42,7 @@ function SubmitButton() {
 }
 
 export function CreateBitcoinAccountForm() {
-  const [state, formAction] = useFormState(createBitcoinAccount, initialState);
+  const [state, formAction] = useActionState(createBitcoinAccount, initialState);
   const { toast } = useToast();
   const formRef = useRef<HTMLFormElement>(null);
 
