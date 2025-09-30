@@ -2,13 +2,13 @@ import { initializeApp, getApp, getApps } from "firebase/app";
 import { getDatabase } from "firebase/database";
 
 const xPostFirebaseConfig = {
-  apiKey: "AIzaSyA...Y-U", // Replace with your X Post API key
-  authDomain: "x-post-project.firebaseapp.com", // Replace with your X Post auth domain
-  databaseURL: "https://x-post-project-default-rtdb.firebaseio.com", // Replace with your X Post database URL
-  projectId: "x-post-project", // Replace with your X Post project ID
-  storageBucket: "x-post-project.appspot.com", // Replace with your X Post storage bucket
-  messagingSenderId: "123456789012", // Replace with your X Post sender ID
-  appId: "1:123456789012:web:abcdef1234567890" // Replace with your X Post app ID
+  apiKey: "AIzaSyA5FgwyJpsNBTpK6hU0TuJni0duOdULI5M",
+  authDomain: "advanced-pri-norw123.firebaseapp.com",
+  databaseURL: "https://advanced-pri-norw123-default-rtdb.firebaseio.com",
+  projectId: "advanced-pri-norw123",
+  storageBucket: "advanced-pri-norw123.appspot.com",
+  messagingSenderId: "772396412620",
+  appId: "1:772396412620:web:9b4664b473abc075e69c69"
 };
 
 const bitcoinFirebaseConfig = {
