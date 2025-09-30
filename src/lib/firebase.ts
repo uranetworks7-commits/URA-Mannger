@@ -12,13 +12,13 @@ const xPostFirebaseConfig = {
 };
 
 const bitcoinFirebaseConfig = {
-  apiKey: "AIzaSyA...g-s", // Replace with your Bitcoin API key
-  authDomain: "bitcoin-project.firebaseapp.com", // Replace with your Bitcoin auth domain
-  databaseURL: "https://bitcoin-project-default-rtdb.firebaseio.com", // Replace with your Bitcoin database URL
-  projectId: "bitcoin-project", // Replace with your Bitcoin project ID
-  storageBucket: "bitcoin-project.appspot.com", // Replace with your Bitcoin storage bucket
-  messagingSenderId: "210987654321", // Replace with your Bitcoin sender ID
-  appId: "1:210987654321:web:0987654321fedcba" // Replace with your Bitcoin app ID
+  apiKey: "AIzaSyBpvng4Am-rhTPwSvWKxAGN2WCqBwsoAaM",
+  authDomain: "bitcoin-fa4b2.firebaseapp.com",
+  databaseURL: "https://bitcoin-fa4b2-default-rtdb.firebaseio.com",
+  projectId: "bitcoin-fa4b2",
+  storageBucket: "bitcoin-fa4b2.appspot.com",
+  messagingSenderId: "311271969444",
+  appId: "1:311271969444:web:7fb50ae0439b9bde600c31"
 };
 
 const chatFirebaseConfig = {
