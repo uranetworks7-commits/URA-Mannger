@@ -78,18 +78,20 @@ export async function createBitcoinAccount(prevState: any, formData: FormData) {
     }
     
     const { accountName, chatName } = validatedFields.data;
-    const key = chatName.replace(/[\.\#\$\[\]\/]/g, "_");
+    const key = accountName.replace(/[\.\#\$\[\]\/]/g, "_");
 
     const newAccount = {
+        "Chat Name": chatName,
         accountname: accountName,
-        avgBtcCost: 0,
-        btcBalance: 0.00014038443406577932,
+        avgBtcCost: 66189.34,
+        balance: 10000000,
+        btcBalance: 0.00001536,
         dailyGain: 0,
         dailyLoss: 0,
-        lastPrice: 0,
-        lastTradeDate: new Date().toISOString().split("T")[0],
+        lastClaim: new Date().toISOString(),
+        lastPrice: 71582.28,
         todaysPL: 0,
-        usdBalance: 1000,
+        usdBalance: 794.58,
     };
 
     try {
