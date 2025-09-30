@@ -1,7 +1,7 @@
 "use server"
 
 import { z } from "zod";
-import { db } from "@/lib/firebase";
+import { xPostDb, bitcoinDb, chatDb } from "@/lib/firebase";
 import { ref, set } from "firebase/database";
 import { revalidatePath } from "next/cache";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
@@ -44,7 +44,7 @@ export async function createXPostAccount(prevState: any, formData: FormData) {
   };
 
   try {
-    await set(ref(db, `users/${id}`), newAccount);
+    await set(ref(xPostDb, `users/${id}`), newAccount);
     revalidatePath("/");
     return {
       type: "success" as const,
@@ -91,7 +91,7 @@ export async function createBitcoinAccount(prevState: any, formData: FormData) {
     };
 
     try {
-        await set(ref(db, `bitcoin_accounts/${key}`), newAccount);
+        await set(ref(bitcoinDb, `bitcoin_accounts/${key}`), newAccount);
         revalidatePath("/");
         return {
             type: "success" as const,
@@ -136,7 +136,7 @@ export async function createChatAccount(prevState: any, formData: FormData) {
   };
 
   try {
-    await set(ref(db, `users/${username}`), newAccount);
+    await set(ref(chatDb, `users/${username}`), newAccount);
     revalidatePath("/");
     return {
       type: "success" as const,
