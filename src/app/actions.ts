@@ -78,24 +78,26 @@ export async function createBitcoinAccount(prevState: any, formData: FormData) {
     }
     
     const { accountName, chatName } = validatedFields.data;
-    const key = accountName.replace(/[\.\#\$\[\]\/]/g, "_").toLowerCase();
+    const key = chatName.replace(/[\.\#\$\[\]\/]/g, "_");
 
     const newAccount = {
-        "accountname": accountName,
-        "Chat Name ": `@${chatName}`,
-        "btcBalance": 0.00014038443406577932,
-        "usdBalance": Math.floor(Math.random() * (1500 - 500 + 1)) + 500, // Random balance between 500-1500
-        "dailyGain": Math.random() * 0.2,
-        "dailyLoss": Math.random() * 0.2,
-        "lastTradeDate": new Date().toISOString().split("T")[0],
+        accountname: accountName,
+        avgBtcCost: 0,
+        btcBalance: 0.00014038443406577932,
+        dailyGain: 0,
+        dailyLoss: 0,
+        lastPrice: 0,
+        lastTradeDate: new Date().toISOString().split("T")[0],
+        todaysPL: 0,
+        usdBalance: 1000,
     };
 
     try {
-        await set(ref(bitcoinDb, `bitcoin_accounts/${key}`), newAccount);
+        await set(ref(bitcoinDb, `Users/${key}`), newAccount);
         revalidatePath("/");
         return {
             type: "success" as const,
-            message: `Bitcoin account "${accountName}" created successfully.`,
+            message: `Bitcoin account "${accountName}" for user "${chatName}" created successfully.`,
         };
     } catch (error) {
         return {

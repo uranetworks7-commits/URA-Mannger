@@ -21,7 +21,7 @@ import { Loader2 } from "lucide-react";
 
 const bitcoinSchema = z.object({
   accountName: z.string().min(1, "Account name is required."),
-  chatName: z.string().min(1, "Chat name is required."),
+  chatName: z.string().min(1, "User name is required."),
 });
 
 type BitcoinFormValues = z.infer<typeof bitcoinSchema>;
@@ -93,7 +93,7 @@ export function CreateBitcoinAccountForm() {
           name="chatName"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Chat Name</FormLabel>
+              <FormLabel>User Name</FormLabel>
               <FormControl>
                 <Input placeholder="e.g. CryptoKing" {...field} />
               </FormControl>
