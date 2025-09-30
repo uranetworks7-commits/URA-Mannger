@@ -33,7 +33,7 @@ export async function createXPostAccount(prevState: any, formData: FormData) {
 
   const newAccount = {
     id,
-    name: `@${chatName}`,
+    name: chatName,
     mainAccountUsername,
     avatar: avatarUrl || defaultAvatar,
     isMonetized: true,
