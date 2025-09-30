@@ -93,7 +93,7 @@ export function CreateBitcoinAccountForm() {
           name="chatName"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Chat Name</FormLabel>
+              <FormLabel>User Name</FormLabel>
               <FormControl>
                 <Input placeholder="e.g. @Ayush" {...field} />
               </FormControl>

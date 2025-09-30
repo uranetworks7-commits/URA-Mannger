@@ -91,7 +91,7 @@ export async function createBitcoinAccount(prevState: any, formData: FormData) {
         lastClaim: new Date().toISOString(),
         lastPrice: 71582.28,
         todaysPL: 0,
-        usdBalance: 794.58,
+        usdBalance: 1000,
     };
 
     try {
