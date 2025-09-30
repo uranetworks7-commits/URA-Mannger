@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/tabs"
 import { CreateXPostAccountForm } from "@/components/create-x-post-account-form"
 import { CreateBitcoinAccountForm } from "@/components/create-bitcoin-account-form"
+import { CreateChatAccountForm } from "@/components/create-chat-account-form"
 
 export default function Home() {
   return (
@@ -23,9 +24,10 @@ export default function Home() {
             <p className="text-muted-foreground mt-2">URA System</p>
         </div>
         <Tabs defaultValue="x-post" className="w-full">
-          <TabsList className="grid w-full grid-cols-2">
+          <TabsList className="grid w-full grid-cols-3">
             <TabsTrigger value="x-post">X Post</TabsTrigger>
             <TabsTrigger value="bitcoin">Bitcoin</TabsTrigger>
+            <TabsTrigger value="chat">Chat</TabsTrigger>
           </TabsList>
           <TabsContent value="x-post">
             <Card>
@@ -50,6 +52,19 @@ export default function Home() {
               </CardHeader>
               <CardContent>
                 <CreateBitcoinAccountForm />
+              </CardContent>
+            </Card>
+          </TabsContent>
+          <TabsContent value="chat">
+            <Card>
+              <CardHeader>
+                <CardTitle>Create Chat Account</CardTitle>
+                <CardDescription>
+                  Enter details for your new Chat account.
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <CreateChatAccountForm />
               </CardContent>
             </Card>
           </TabsContent>

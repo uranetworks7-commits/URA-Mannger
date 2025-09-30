@@ -2,13 +2,13 @@ import { initializeApp, getApp, getApps } from "firebase/app";
 import { getDatabase } from "firebase/database";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyA5FgwyJpsNBTpK6hU0TuJni0duOdULI5M",
-  authDomain: "advanced-pri-norw123.firebaseapp.com",
-  databaseURL: "https://advanced-pri-norw123-default-rtdb.firebaseio.com",
-  projectId: "advanced-pri-norw123",
-  storageBucket: "advanced-pri-norw123.appspot.com",
-  messagingSenderId: "772396412620",
-  appId: "1:772396412620:web:9b4664b473abc075e69c69"
+  apiKey: "AIzaSyArPQVGOR1gMWOiGVHVd0XkKFKRVMdWEcU",
+  authDomain: "advanced-pri-wol-f66.firebaseapp.com",
+  databaseURL: "https://advanced-pri-wol-f66-default-rtdb.firebaseio.com",
+  projectId: "advanced-pri-wol-f66",
+  storageBucket: "advanced-pri-wol-f66.appspot.com",
+  messagingSenderId: "323155912274",
+  appId: "1:323155912274:web:3260266198ae14c6e0218b"
 };
 
 const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();

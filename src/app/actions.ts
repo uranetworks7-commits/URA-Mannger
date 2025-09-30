@@ -104,3 +104,48 @@ export async function createBitcoinAccount(prevState: any, formData: FormData) {
         };
     }
 }
+
+const chatAccountSchema = z.object({
+  username: z.string().min(1, "Username is required."),
+  customName: z.string().min(1, "Custom name is required."),
+  profileImageUrl: z.string().url("Please enter a valid URL.").optional().or(z.literal('')),
+});
+
+export async function createChatAccount(prevState: any, formData: FormData) {
+  const validatedFields = chatAccountSchema.safeParse({
+    username: formData.get("username"),
+    customName: formData.get("customName"),
+    profileImageUrl: formData.get("profileImageUrl"),
+  });
+
+  if (!validatedFields.success) {
+    return {
+      type: "error" as const,
+      message: "Invalid form data.",
+      errors: validatedFields.error.flatten().fieldErrors,
+    };
+  }
+
+  const { username, customName, profileImageUrl } = validatedFields.data;
+  
+  const newAccount = {
+    username,
+    customName,
+    profileImageUrl: profileImageUrl || `https://avatar.vercel.sh/${username}.png`,
+    role: "user",
+  };
+
+  try {
+    await set(ref(db, `users/${username}`), newAccount);
+    revalidatePath("/");
+    return {
+      type: "success" as const,
+      message: `Chat account for ${username} created successfully.`,
+    };
+  } catch (error) {
+    return {
+      type: "error" as const,
+      message: "Failed to create chat account in Firebase.",
+    };
+  }
+}
