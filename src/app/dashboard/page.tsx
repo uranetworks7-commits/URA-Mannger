@@ -18,6 +18,7 @@ import { CreateXPostAccountForm } from "@/components/create-x-post-account-form"
 import { CreateBitcoinAccountForm } from "@/components/create-bitcoin-account-form"
 import { CreateChatAccountForm } from "@/components/create-chat-account-form"
 import { CreateGunFightUserForm } from "@/components/create-gun-fight-user-form"
+import { CreateGiftBoxUserForm } from "@/components/create-gift-box-user-form"
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 
@@ -39,11 +40,12 @@ export default function DashboardPage() {
             <p className="text-muted-foreground mt-2">URA System</p>
         </div>
         <Tabs defaultValue="x-post" className="w-full">
-          <TabsList className="grid w-full grid-cols-4">
+          <TabsList className="grid w-full grid-cols-5">
             <TabsTrigger value="x-post">X Post</TabsTrigger>
             <TabsTrigger value="bitcoin">Bitcoin</TabsTrigger>
             <TabsTrigger value="chat">Chat</TabsTrigger>
             <TabsTrigger value="gun-fight">Gun Fight</TabsTrigger>
+            <TabsTrigger value="gift-box">Gift Box</TabsTrigger>
           </TabsList>
           <TabsContent value="x-post">
             <Card>
@@ -94,6 +96,19 @@ export default function DashboardPage() {
               </CardHeader>
               <CardContent>
                 <CreateGunFightUserForm />
+              </CardContent>
+            </Card>
+          </TabsContent>
+          <TabsContent value="gift-box">
+            <Card>
+              <CardHeader>
+                <CardTitle>Create Gift Box User</CardTitle>
+                <CardDescription>
+                  Enter a username to create a new Gift Box user.
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <CreateGiftBoxUserForm />
               </CardContent>
             </Card>
           </TabsContent>

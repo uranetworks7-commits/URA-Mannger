@@ -2,7 +2,7 @@
 "use server"
 
 import { z } from "zod";
-import { xPostDb, bitcoinDb, chatDb, gunFightDb, get, child, set, databaseRef, push } from "@/lib/firebase";
+import { xPostDb, bitcoinDb, chatDb, gunFightDb, giftBoxDb, get, child, set, databaseRef, push } from "@/lib/firebase";
 import { revalidatePath } from "next/cache";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
 
@@ -196,6 +196,51 @@ export async function createGunFightUser(prevState: any, formData: FormData) {
         return {
             type: "error" as const,
             message: error.message || "Failed to create Gun Fight user in Firebase.",
+        };
+    }
+}
+
+
+const giftBoxSchema = z.object({
+  username: z.string().min(1, "Username is required."),
+});
+
+export async function createGiftBoxUser(prevState: any, formData: FormData) {
+    const validatedFields = giftBoxSchema.safeParse({
+        username: formData.get("username"),
+    });
+
+    if (!validatedFields.success) {
+        return {
+            type: "error" as const,
+            message: "Invalid form data.",
+            errors: validatedFields.error.flatten().fieldErrors,
+        };
+    }
+
+    const { username } = validatedFields.data;
+
+    try {
+        const usersRef = databaseRef(giftBoxDb, 'users');
+        const newUserRef = push(usersRef);
+        const userId = newUserRef.key;
+
+        const newUser = {
+            user_id: userId,
+            username: username,
+            xp: 50
+        };
+
+        await set(newUserRef, newUser);
+        revalidatePath("/");
+        return {
+            type: "success" as const,
+            message: `Gift Box user "${username}" created successfully.`,
+        };
+    } catch (error: any) {
+        return {
+            type: "error" as const,
+            message: error.message || "Failed to create Gift Box user in Firebase.",
         };
     }
 }

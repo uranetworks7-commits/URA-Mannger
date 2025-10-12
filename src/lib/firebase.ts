@@ -41,6 +41,16 @@ const gunFightFirebaseConfig = {
     appId: "1:1060940709340:web:ad1d94f60524d90b252319"
 };
 
+const giftBoxFirebaseConfig = {
+  apiKey: "AIzaSyA3BcsYHFGcwgsNp8-p0U5HXZeAIMiYR0Q",
+  authDomain: "bitsim-realtrade.firebaseapp.com",
+  databaseURL: "https://bitsim-realtrade-default-rtdb.firebaseio.com",
+  projectId: "bitsim-realtrade",
+  storageBucket: "bitsim-realtrade.appspot.com",
+  messagingSenderId: "475728173031",
+  appId: "1:475728173031:web:63e0e891c6651bf96ecf42"
+};
+
 // Helper to initialize app safely
 function initializeFirebaseApp(config: object, appName: string) {
     const existingApp = getApps().find(app => app.name === appName);
@@ -54,13 +64,15 @@ const xPostApp = initializeFirebaseApp(xPostFirebaseConfig, "xPostApp");
 const bitcoinApp = initializeFirebaseApp(bitcoinFirebaseConfig, "bitcoinApp");
 const chatApp = initializeFirebaseApp(chatFirebaseConfig, "chatApp");
 const gunFightApp = initializeFirebaseApp(gunFightFirebaseConfig, "gunFightApp");
+const giftBoxApp = initializeFirebaseApp(giftBoxFirebaseConfig, "giftBoxApp");
 
 
 const xPostDb = getDatabase(xPostApp);
 const bitcoinDb = getDatabase(bitcoinApp);
 const chatDb = getDatabase(chatApp);
 const gunFightDb = getDatabase(gunFightApp);
+const giftBoxDb = getDatabase(giftBoxApp);
 
 
-export { xPostApp, xPostDb, bitcoinApp, bitcoinDb, chatApp, chatDb, gunFightApp, gunFightDb };
+export { xPostApp, xPostDb, bitcoinApp, bitcoinDb, chatApp, chatDb, gunFightApp, gunFightDb, giftBoxApp, giftBoxDb };
 export { push, databaseRef, set, get, child };
