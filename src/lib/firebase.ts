@@ -51,6 +51,16 @@ const uraTradeFirebaseConfig = {
   appId: "1:311271969444:web:7fb50ae0439b9bde600c31"
 };
 
+const mailFirebaseConfig = {
+  apiKey: "AIzaSyCJ0PpBeIIYfr0SfVfP6qMaaT4YW7rLG4M",
+  authDomain: "ura-trade.firebaseapp.com",
+  databaseURL: "https://ura-trade-default-rtdb.firebaseio.com",
+  projectId: "ura-trade",
+  storageBucket: "ura-trade.firebasestorage.app",
+  messagingSenderId: "302606112899",
+  appId: "1:302606112899:web:f3ef78c7c1a850ab29a3b6"
+};
+
 
 // Helper to initialize app safely
 function initializeFirebaseApp(config: object, appName: string) {
@@ -66,6 +76,7 @@ const chatApp = initializeFirebaseApp(chatFirebaseConfig, "chatApp");
 const gunFightApp = initializeFirebaseApp(gunFightFirebaseConfig, "gunFightApp");
 const giftBoxApp = initializeFirebaseApp(giftBoxFirebaseConfig, "giftBoxApp");
 const uraTradeApp = initializeFirebaseApp(uraTradeFirebaseConfig, "uraTradeApp");
+const mailApp = initializeFirebaseApp(mailFirebaseConfig, "mailApp");
 
 
 const xPostDb = getDatabase(xPostApp);
@@ -73,7 +84,8 @@ const chatDb = getDatabase(chatApp);
 const gunFightDb = getDatabase(gunFightApp);
 const giftBoxDb = getDatabase(giftBoxApp);
 const uraTradeDb = getDatabase(uraTradeApp);
+const mailDb = getDatabase(mailApp);
 
 
-export { xPostApp, xPostDb, chatApp, chatDb, gunFightApp, gunFightDb, giftBoxApp, giftBoxDb, uraTradeApp, uraTradeDb };
+export { xPostApp, xPostDb, chatApp, chatDb, gunFightApp, gunFightDb, giftBoxApp, giftBoxDb, uraTradeApp, uraTradeDb, mailApp, mailDb };
 export { push, databaseRef, set, get, child };

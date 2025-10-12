@@ -1,6 +1,7 @@
 
 'use client';
 
+import Link from "next/link";
 import {
   Card,
   CardContent,
@@ -22,6 +23,8 @@ import { CreateUraTradeAccountForm } from "@/components/create-ura-trade-account
 import { CreateMasterAccountForm } from "@/components/create-master-account-form"
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { buttonVariants } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 export default function DashboardPage() {
   const router = useRouter();
@@ -43,6 +46,9 @@ export default function DashboardPage() {
         <TabsList className="flex flex-col h-auto justify-start">
           <TabsTrigger value="master-account" className="w-full justify-start">Master Account</TabsTrigger>
           <TabsTrigger value="manual" className="w-full justify-start">Manual</TabsTrigger>
+           <Link href="/other-function" className={cn(buttonVariants({ variant: "ghost" }), "w-full justify-start")}>
+            Other Function
+          </Link>
         </TabsList>
         <div className="flex-grow">
           <TabsContent value="master-account" className="mt-0">
