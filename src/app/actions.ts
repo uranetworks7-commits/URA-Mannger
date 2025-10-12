@@ -216,7 +216,7 @@ export async function createUraTradeAccount(prevState: any, formData: FormData) 
   const { username, chatName } = validatedFields.data;
 
   const newAccount = {
-    "Chat Name": chatName,
+    "Chat Name ": chatName,
     accountname: username,
     avgBtcCost: 0,
     btcBalance: 0,
