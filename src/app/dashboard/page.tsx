@@ -20,6 +20,7 @@ import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { Bird } from "lucide-react";
 
 export default function DashboardPage() {
   const router = useRouter();
@@ -34,7 +35,10 @@ export default function DashboardPage() {
   return (
     <main className="flex min-h-screen w-full flex-col items-center justify-center bg-background p-4">
       <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold font-headline tracking-tight text-foreground">URA Manager</h1>
+          <h1 className="text-4xl font-bold font-headline tracking-tight text-foreground flex items-center justify-center gap-2">
+            <Bird className="h-10 w-10" />
+            URA Manager
+          </h1>
           <p className="text-muted-foreground mt-2">URA System</p>
       </div>
       <Tabs defaultValue="master-account" orientation="vertical" className="w-full max-w-5xl flex gap-8">
