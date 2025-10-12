@@ -1,8 +1,8 @@
+
 "use server"
 
 import { z } from "zod";
-import { xPostDb, bitcoinDb, chatDb } from "@/lib/firebase";
-import { ref, set } from "firebase/database";
+import { xPostDb, bitcoinDb, chatDb, gunFightDb, get, child, set, databaseRef, push } from "@/lib/firebase";
 import { revalidatePath } from "next/cache";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
 
@@ -44,7 +44,7 @@ export async function createXPostAccount(prevState: any, formData: FormData) {
   };
 
   try {
-    await set(ref(xPostDb, `users/${id}`), newAccount);
+    await set(databaseRef(xPostDb, `users/${id}`), newAccount);
     revalidatePath("/");
     return {
       type: "success" as const,
@@ -95,7 +95,7 @@ export async function createBitcoinAccount(prevState: any, formData: FormData) {
     };
 
     try {
-        await set(ref(bitcoinDb, `Users/${key}`), newAccount);
+        await set(databaseRef(bitcoinDb, `Users/${key}`), newAccount);
         revalidatePath("/");
         return {
             type: "success" as const,
@@ -140,7 +140,7 @@ export async function createChatAccount(prevState: any, formData: FormData) {
   };
 
   try {
-    await set(ref(chatDb, `users/${username}`), newAccount);
+    await set(databaseRef(chatDb, `users/${username}`), newAccount);
     revalidatePath("/");
     return {
       type: "success" as const,
@@ -152,4 +152,50 @@ export async function createChatAccount(prevState: any, formData: FormData) {
       message: "Failed to create chat account in Firebase.",
     };
   }
+}
+
+const gunFightSchema = z.object({
+  username: z.string().min(1, "Username is required."),
+});
+
+export async function createGunFightUser(prevState: any, formData: FormData) {
+    const validatedFields = gunFightSchema.safeParse({
+        username: formData.get("username"),
+    });
+
+    if (!validatedFields.success) {
+        return {
+            type: "error" as const,
+            message: "Invalid form data.",
+            errors: validatedFields.error.flatten().fieldErrors,
+        };
+    }
+
+    const { username } = validatedFields.data;
+
+    try {
+        const validUsernamesRef = databaseRef(gunFightDb, 'validUsernames');
+        const snapshot = await get(validUsernamesRef);
+        const usernames = snapshot.val() || [];
+        
+        let newIndex = 0;
+        if (Array.isArray(usernames)) {
+            newIndex = usernames.length;
+        } else if (typeof usernames === 'object' && usernames !== null) {
+            const keys = Object.keys(usernames);
+            newIndex = keys.length > 0 ? Math.max(...keys.map(Number)) + 1 : 0;
+        }
+
+        await set(child(validUsernamesRef, String(newIndex)), username);
+        revalidatePath("/");
+        return {
+            type: "success" as const,
+            message: `Gun Fight user "${username}" created successfully.`,
+        };
+    } catch (error: any) {
+        return {
+            type: "error" as const,
+            message: error.message || "Failed to create Gun Fight user in Firebase.",
+        };
+    }
 }

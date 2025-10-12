@@ -17,6 +17,7 @@ import {
 import { CreateXPostAccountForm } from "@/components/create-x-post-account-form"
 import { CreateBitcoinAccountForm } from "@/components/create-bitcoin-account-form"
 import { CreateChatAccountForm } from "@/components/create-chat-account-form"
+import { CreateGunFightUserForm } from "@/components/create-gun-fight-user-form"
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 
@@ -38,10 +39,11 @@ export default function DashboardPage() {
             <p className="text-muted-foreground mt-2">URA System</p>
         </div>
         <Tabs defaultValue="x-post" className="w-full">
-          <TabsList className="grid w-full grid-cols-3">
+          <TabsList className="grid w-full grid-cols-4">
             <TabsTrigger value="x-post">X Post</TabsTrigger>
             <TabsTrigger value="bitcoin">Bitcoin</TabsTrigger>
             <TabsTrigger value="chat">Chat</TabsTrigger>
+            <TabsTrigger value="gun-fight">Gun Fight</TabsTrigger>
           </TabsList>
           <TabsContent value="x-post">
             <Card>
@@ -79,6 +81,19 @@ export default function DashboardPage() {
               </CardHeader>
               <CardContent>
                 <CreateChatAccountForm />
+              </CardContent>
+            </Card>
+          </TabsContent>
+          <TabsContent value="gun-fight">
+            <Card>
+              <CardHeader>
+                <CardTitle>Create Gun Fight User</CardTitle>
+                <CardDescription>
+                  Enter a username to create a new Gun Fight user.
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <CreateGunFightUserForm />
               </CardContent>
             </Card>
           </TabsContent>

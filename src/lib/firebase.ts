@@ -1,5 +1,5 @@
 import { initializeApp, getApp, getApps } from "firebase/app";
-import { getDatabase } from "firebase/database";
+import { getDatabase, push, ref as databaseRef, set, get, child } from "firebase/database";
 
 const xPostFirebaseConfig = {
   apiKey: "AIzaSyA5FgwyJpsNBTpK6hU0TuJni0duOdULI5M",
@@ -31,6 +31,16 @@ const chatFirebaseConfig = {
   appId: "1:323155912274:web:3260266198ae14c6e0218b"
 };
 
+const gunFightFirebaseConfig = {
+    apiKey: "AIzaSyDXNGzvFUtkGlB0pPDW1FOsrkamPNl2HSI",
+    authDomain: "gunfightgame-166d9.firebaseapp.com",
+    databaseURL: "https://gunfightgame-166d9-default-rtdb.firebaseio.com",
+    projectId: "gunfightgame-166d9",
+    storageBucket: "gunfightgame-166d9.appspot.com",
+    messagingSenderId: "1060940709340",
+    appId: "1:1060940709340:web:ad1d94f60524d90b252319"
+};
+
 // Helper to initialize app safely
 function initializeFirebaseApp(config: object, appName: string) {
     const existingApp = getApps().find(app => app.name === appName);
@@ -43,9 +53,14 @@ function initializeFirebaseApp(config: object, appName: string) {
 const xPostApp = initializeFirebaseApp(xPostFirebaseConfig, "xPostApp");
 const bitcoinApp = initializeFirebaseApp(bitcoinFirebaseConfig, "bitcoinApp");
 const chatApp = initializeFirebaseApp(chatFirebaseConfig, "chatApp");
+const gunFightApp = initializeFirebaseApp(gunFightFirebaseConfig, "gunFightApp");
+
 
 const xPostDb = getDatabase(xPostApp);
 const bitcoinDb = getDatabase(bitcoinApp);
 const chatDb = getDatabase(chatApp);
+const gunFightDb = getDatabase(gunFightApp);
 
-export { xPostApp, xPostDb, bitcoinApp, bitcoinDb, chatApp, chatDb };
+
+export { xPostApp, xPostDb, bitcoinApp, bitcoinDb, chatApp, chatDb, gunFightApp, gunFightDb };
+export { push, databaseRef, set, get, child };
