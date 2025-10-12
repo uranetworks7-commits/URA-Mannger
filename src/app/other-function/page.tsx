@@ -131,6 +131,7 @@ export default function OtherFunctionPage() {
                 <TabsTrigger value="mail-box">Mail Box</TabsTrigger>
                 <TabsTrigger value="redeem-request">Redeem Request</TabsTrigger>
                 <TabsTrigger value="withdrawal">Withdrawal</TabsTrigger>
+                <TabsTrigger value="form">Form</TabsTrigger>
               </TabsList>
               <TabsContent value="mail-box">
                 <Card>
@@ -259,6 +260,21 @@ export default function OtherFunctionPage() {
                         </TableBody>
                       </Table>
                     )}
+                  </CardContent>
+                </Card>
+              </TabsContent>
+              <TabsContent value="form">
+                <Card>
+                  <CardHeader>
+                    <CardTitle>External Form</CardTitle>
+                    <CardDescription>Click the button to view the external form.</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <Button asChild>
+                      <Link href="https://ura-services.netlify.app" target="_blank" rel="noopener noreferrer">
+                        View Form
+                      </Link>
+                    </Button>
                   </CardContent>
                 </Card>
               </TabsContent>
