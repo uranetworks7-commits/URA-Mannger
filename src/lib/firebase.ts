@@ -72,6 +72,16 @@ const redeemRequestFirebaseConfig = {
     appId: "YOUR_APP_ID"
 };
 
+const withdrawalFirebaseConfig = {
+  apiKey: "AIzaSyA5FgwyJpsNBTpK6hU0TuJni0duOdULI5M",
+  authDomain: "advanced-pri-norw123.firebaseapp.com",
+  databaseURL: "https://advanced-pri-norw123-default-rtdb.firebaseio.com",
+  projectId: "advanced-pri-norw123",
+  storageBucket: "advanced-pri-norw123.appspot.com",
+  messagingSenderId: "772396412620",
+  appId: "1:772396412620:web:9b4664b473abc075e69c69"
+};
+
 
 // Helper to initialize app safely
 function initializeFirebaseApp(config: object, appName: string) {
@@ -89,6 +99,7 @@ const giftBoxApp = initializeFirebaseApp(giftBoxFirebaseConfig, "giftBoxApp");
 const uraTradeApp = initializeFirebaseApp(uraTradeFirebaseConfig, "uraTradeApp");
 const mailApp = initializeFirebaseApp(mailFirebaseConfig, "mailApp");
 const redeemRequestApp = initializeFirebaseApp(redeemRequestFirebaseConfig, "redeemRequestApp");
+const withdrawalApp = initializeFirebaseApp(withdrawalFirebaseConfig, "withdrawalApp");
 
 
 const xPostDb = getDatabase(xPostApp);
@@ -98,7 +109,8 @@ const giftBoxDb = getDatabase(giftBoxApp);
 const uraTradeDb = getDatabase(uraTradeApp);
 const mailDb = getDatabase(mailApp);
 const redeemRequestDb = getDatabase(redeemRequestApp);
+const withdrawalDb = getDatabase(withdrawalApp);
 
 
-export { xPostApp, xPostDb, chatApp, chatDb, gunFightApp, gunFightDb, giftBoxApp, giftBoxDb, uraTradeApp, uraTradeDb, mailApp, mailDb, redeemRequestApp, redeemRequestDb };
+export { xPostApp, xPostDb, chatApp, chatDb, gunFightApp, gunFightDb, giftBoxApp, giftBoxDb, uraTradeApp, uraTradeDb, mailApp, mailDb, redeemRequestApp, redeemRequestDb, withdrawalApp, withdrawalDb };
 export { push, databaseRef, set, get, child };
