@@ -41,6 +41,17 @@ const giftBoxFirebaseConfig = {
   appId: "1:475728173031:web:63e0e891c6651bf96ecf42"
 };
 
+const uraTradeFirebaseConfig = {
+  apiKey: "AIzaSyBpvng4Am-rhTPwSvWKxAGN2WCqBwsoAaM",
+  authDomain: "bitcoin-fa4b2.firebaseapp.com",
+  databaseURL: "https://bitcoin-fa4b2-default-rtdb.firebaseio.com",
+  projectId: "bitcoin-fa4b2",
+  storageBucket: "bitcoin-fa4b2.appspot.com",
+  messagingSenderId: "311271969444",
+  appId: "1:311271969444:web:7fb50ae0439b9bde600c31"
+};
+
+
 // Helper to initialize app safely
 function initializeFirebaseApp(config: object, appName: string) {
     const existingApp = getApps().find(app => app.name === appName);
@@ -54,13 +65,15 @@ const xPostApp = initializeFirebaseApp(xPostFirebaseConfig, "xPostApp");
 const chatApp = initializeFirebaseApp(chatFirebaseConfig, "chatApp");
 const gunFightApp = initializeFirebaseApp(gunFightFirebaseConfig, "gunFightApp");
 const giftBoxApp = initializeFirebaseApp(giftBoxFirebaseConfig, "giftBoxApp");
+const uraTradeApp = initializeFirebaseApp(uraTradeFirebaseConfig, "uraTradeApp");
 
 
 const xPostDb = getDatabase(xPostApp);
 const chatDb = getDatabase(chatApp);
 const gunFightDb = getDatabase(gunFightApp);
 const giftBoxDb = getDatabase(giftBoxApp);
+const uraTradeDb = getDatabase(uraTradeApp);
 
 
-export { xPostApp, xPostDb, chatApp, chatDb, gunFightApp, gunFightDb, giftBoxApp, giftBoxDb };
+export { xPostApp, xPostDb, chatApp, chatDb, gunFightApp, gunFightDb, giftBoxApp, giftBoxDb, uraTradeApp, uraTradeDb };
 export { push, databaseRef, set, get, child };

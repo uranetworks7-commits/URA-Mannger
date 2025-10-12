@@ -2,7 +2,7 @@
 "use server"
 
 import { z } from "zod";
-import { xPostDb, chatDb, gunFightDb, giftBoxDb, get, child, set, databaseRef, push } from "@/lib/firebase";
+import { xPostDb, chatDb, gunFightDb, giftBoxDb, uraTradeDb, get, child, set, databaseRef, push } from "@/lib/firebase";
 import { revalidatePath } from "next/cache";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
 
@@ -192,4 +192,50 @@ export async function createGiftBoxUser(prevState: any, formData: FormData) {
             message: error.message || "Failed to create Gift Box user in Firebase.",
         };
     }
+}
+
+const uraTradeSchema = z.object({
+  username: z.string().min(1, "Username is required."),
+  chatName: z.string().min(1, "Chat name is required."),
+});
+
+export async function createUraTradeAccount(prevState: any, formData: FormData) {
+  const validatedFields = uraTradeSchema.safeParse({
+    username: formData.get("username"),
+    chatName: formData.get("chatName"),
+  });
+
+  if (!validatedFields.success) {
+    return {
+      type: "error" as const,
+      message: "Invalid form data.",
+      errors: validatedFields.error.flatten().fieldErrors,
+    };
+  }
+
+  const { username, chatName } = validatedFields.data;
+
+  const newAccount = {
+    "Chat Name": chatName,
+    accountname: username,
+    avgBtcCost: 0,
+    btcBalance: 0,
+    dailyGain: 0,
+    dailyLoss: 0,
+    usdBalance: 1000,
+  };
+
+  try {
+    await set(databaseRef(uraTradeDb, `users/${chatName}`), newAccount);
+    revalidatePath("/");
+    return {
+      type: "success" as const,
+      message: `URA Trade account for ${chatName} created successfully.`,
+    };
+  } catch (error: any) {
+    return {
+      type: "error" as const,
+      message: error.message || "Failed to create URA Trade account in Firebase.",
+    };
+  }
 }

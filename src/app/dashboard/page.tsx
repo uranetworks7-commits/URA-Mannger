@@ -18,6 +18,7 @@ import { CreateXPostAccountForm } from "@/components/create-x-post-account-form"
 import { CreateChatAccountForm } from "@/components/create-chat-account-form"
 import { CreateGunFightUserForm } from "@/components/create-gun-fight-user-form"
 import { CreateGiftBoxUserForm } from "@/components/create-gift-box-user-form"
+import { CreateUraTradeAccountForm } from "@/components/create-ura-trade-account-form"
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 
@@ -39,11 +40,12 @@ export default function DashboardPage() {
             <p className="text-muted-foreground mt-2">URA System</p>
         </div>
         <Tabs defaultValue="x-post" className="w-full">
-          <TabsList className="grid w-full grid-cols-4">
+          <TabsList className="grid w-full grid-cols-5">
             <TabsTrigger value="x-post">X Post</TabsTrigger>
             <TabsTrigger value="chat">Chat</TabsTrigger>
             <TabsTrigger value="gun-fight">Gun Fight</TabsTrigger>
             <TabsTrigger value="gift-box">Gift Box</TabsTrigger>
+            <TabsTrigger value="ura-trade">URA Trade</TabsTrigger>
           </TabsList>
           <TabsContent value="x-post">
             <Card>
@@ -94,6 +96,19 @@ export default function DashboardPage() {
               </CardHeader>
               <CardContent>
                 <CreateGiftBoxUserForm />
+              </CardContent>
+            </Card>
+          </TabsContent>
+           <TabsContent value="ura-trade">
+            <Card>
+              <CardHeader>
+                <CardTitle>Create URA Trade Account</CardTitle>
+                <CardDescription>
+                  Enter details to create a new URA Trade account.
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <CreateUraTradeAccountForm />
               </CardContent>
             </Card>
           </TabsContent>
