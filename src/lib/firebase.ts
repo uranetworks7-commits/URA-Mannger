@@ -1,3 +1,4 @@
+
 import { initializeApp, getApp, getApps } from "firebase/app";
 import { getDatabase, push, ref as databaseRef, set, get, child } from "firebase/database";
 
@@ -61,6 +62,16 @@ const mailFirebaseConfig = {
   appId: "1:302606112899:web:f3ef78c7c1a850ab29a3b6"
 };
 
+const redeemRequestFirebaseConfig = {
+    apiKey: "YOUR_API_KEY", // This is a placeholder, as the image does not provide one. It may not be needed for public data.
+    authDomain: "public-chat-f6a10.firebaseapp.com",
+    databaseURL: "https://public-chat-f6a10-default-rtdb.firebaseio.com",
+    projectId: "public-chat-f6a10",
+    storageBucket: "public-chat-f6a10.appspot.com",
+    messagingSenderId: "YOUR_SENDER_ID",
+    appId: "YOUR_APP_ID"
+};
+
 
 // Helper to initialize app safely
 function initializeFirebaseApp(config: object, appName: string) {
@@ -77,6 +88,7 @@ const gunFightApp = initializeFirebaseApp(gunFightFirebaseConfig, "gunFightApp")
 const giftBoxApp = initializeFirebaseApp(giftBoxFirebaseConfig, "giftBoxApp");
 const uraTradeApp = initializeFirebaseApp(uraTradeFirebaseConfig, "uraTradeApp");
 const mailApp = initializeFirebaseApp(mailFirebaseConfig, "mailApp");
+const redeemRequestApp = initializeFirebaseApp(redeemRequestFirebaseConfig, "redeemRequestApp");
 
 
 const xPostDb = getDatabase(xPostApp);
@@ -85,7 +97,8 @@ const gunFightDb = getDatabase(gunFightApp);
 const giftBoxDb = getDatabase(giftBoxApp);
 const uraTradeDb = getDatabase(uraTradeApp);
 const mailDb = getDatabase(mailApp);
+const redeemRequestDb = getDatabase(redeemRequestApp);
 
 
-export { xPostApp, xPostDb, chatApp, chatDb, gunFightApp, gunFightDb, giftBoxApp, giftBoxDb, uraTradeApp, uraTradeDb, mailApp, mailDb };
+export { xPostApp, xPostDb, chatApp, chatDb, gunFightApp, gunFightDb, giftBoxApp, giftBoxDb, uraTradeApp, uraTradeDb, mailApp, mailDb, redeemRequestApp, redeemRequestDb };
 export { push, databaseRef, set, get, child };
