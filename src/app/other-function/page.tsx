@@ -129,7 +129,7 @@ export default function OtherFunctionPage() {
             <Tabs defaultValue="mail-box">
               <TabsList>
                 <TabsTrigger value="mail-box">Mail Box</TabsTrigger>
-                <TabsTrigger value="redeem-request">Redeem Request</TabsTrigger>
+                <TabsTrigger value="redeem">Redeem</TabsTrigger>
                 <TabsTrigger value="withdrawal">Withdrawal</TabsTrigger>
                 <TabsTrigger value="form">Form</TabsTrigger>
               </TabsList>
@@ -175,11 +175,11 @@ export default function OtherFunctionPage() {
                   </CardContent>
                 </Card>
               </TabsContent>
-              <TabsContent value="redeem-request">
+              <TabsContent value="redeem">
                 <Card>
                   <CardHeader>
-                    <CardTitle>Redeem Requests</CardTitle>
-                    <CardDescription>All redeem requests are listed here.</CardDescription>
+                    <CardTitle>Redeems</CardTitle>
+                    <CardDescription>All redeems are listed here.</CardDescription>
                   </CardHeader>
                   <CardContent>
                     {loading && <p>Loading requests...</p>}
