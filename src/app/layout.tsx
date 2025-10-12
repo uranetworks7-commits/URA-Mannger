@@ -1,9 +1,10 @@
+
 import type {Metadata} from 'next';
 import './globals.css';
 import { Toaster } from "@/components/ui/toaster"
 
 export const metadata: Metadata = {
-  title: 'X Crypto Accounts',
+  title: 'URA System',
   description: 'Create and manage your X and Crypto accounts.',
 };
 
