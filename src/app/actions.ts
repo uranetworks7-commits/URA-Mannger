@@ -44,6 +44,19 @@ export async function createXPostAccount(prevState: any, formData: FormData) {
   };
 
   try {
+    const xPostUsersRef = databaseRef(xPostDb, 'users');
+    const xPostSnapshot = await get(xPostUsersRef);
+    if (xPostSnapshot.exists()) {
+        const xPostUsers = xPostSnapshot.val();
+        const existingUser = Object.values(xPostUsers).find((user: any) => user.mainAccountUsername === mainAccountUsername);
+        if (existingUser) {
+            return {
+                type: "error" as const,
+                message: `X Post account for ${mainAccountUsername} already exists.`,
+            };
+        }
+    }
+
     await set(databaseRef(xPostDb, `users/${id}`), newAccount);
     revalidatePath("/");
     return {
@@ -297,30 +310,29 @@ export async function createMasterAccount(prevState: any, formData: FormData) {
   const { username, chatName } = validatedFields.data;
   const results = [];
 
-  // 1. Create X Post Account - Assuming no easy check for existence, create new one.
-  const xPostId = `user-${chatName.replace(/\s+/g, '_')}-${Date.now()}`;
-  const xPostAccount = {
-    id: xPostId,
-    name: chatName,
-    mainAccountUsername: username,
-    avatar: PlaceHolderImages.find(img => img.id === 'default-avatar')?.imageUrl || '',
-    isMonetized: true,
-    dailyPostCount: { count: 0, date: new Date().toISOString().split("T")[0] },
-  };
+  // 1. Create X Post Account
   try {
     const xPostUsersRef = databaseRef(xPostDb, 'users');
     const xPostSnapshot = await get(xPostUsersRef);
-    const xPostUsers = xPostSnapshot.val();
-    let xPostUserExists = false;
-    if (xPostUsers) {
-        const existingUser = Object.values(xPostUsers).find((user: any) => user.mainAccountUsername === username);
-        if (existingUser) {
-            xPostUserExists = true;
+    let userExists = false;
+    if (xPostSnapshot.exists()) {
+        const xPostUsers = xPostSnapshot.val();
+        if (Object.values(xPostUsers).some((user: any) => user.mainAccountUsername === username)) {
+            userExists = true;
         }
     }
-    if (xPostUserExists) {
-        results.push("X Post account already exists.");
+    if (userExists) {
+        results.push(`X Post account '${username}' already exists.`);
     } else {
+        const xPostId = `user-${chatName.replace(/\s+/g, '_')}-${Date.now()}`;
+        const xPostAccount = {
+            id: xPostId,
+            name: chatName,
+            mainAccountUsername: username,
+            avatar: PlaceHolderImages.find(img => img.id === 'default-avatar')?.imageUrl || '',
+            isMonetized: true,
+            dailyPostCount: { count: 0, date: new Date().toISOString().split("T")[0] },
+        };
         await set(databaseRef(xPostDb, `users/${xPostId}`), xPostAccount);
         results.push("X Post account created successfully.");
     }
@@ -331,7 +343,7 @@ export async function createMasterAccount(prevState: any, formData: FormData) {
     const chatUserRef = databaseRef(chatDb, `users/${username}`);
     const chatSnapshot = await get(chatUserRef);
     if (chatSnapshot.exists()) {
-      results.push("Chat account already exists.");
+      results.push(`Chat account '${username}' already exists.`);
     } else {
       const chatAccount = {
         username,
@@ -350,7 +362,7 @@ export async function createMasterAccount(prevState: any, formData: FormData) {
     const snapshot = await get(gfRef);
     const usernames = snapshot.val() || [];
      if (Object.values(usernames).includes(username)) {
-        results.push("Gun Fight user already exists.");
+        results.push(`Gun Fight user '${username}' already exists.`);
     } else {
         let newIndex = Array.isArray(usernames) ? usernames.length : (typeof usernames === 'object' && usernames !== null) ? Object.keys(usernames).length : 0;
         await set(child(gfRef, String(newIndex)), username);
@@ -362,16 +374,15 @@ export async function createMasterAccount(prevState: any, formData: FormData) {
   try {
     const giftBoxUsersRef = databaseRef(giftBoxDb, 'users');
     const giftBoxSnapshot = await get(giftBoxUsersRef);
-    const giftBoxUsers = giftBoxSnapshot.val();
-    let giftBoxUserExists = false;
-    if (giftBoxUsers) {
-        const existingUser = Object.values(giftBoxUsers).find((user: any) => user.username === username);
-        if (existingUser) {
-            giftBoxUserExists = true;
+    let userExists = false;
+    if (giftBoxSnapshot.exists()) {
+        const giftBoxUsers = giftBoxSnapshot.val();
+        if (Object.values(giftBoxUsers).some((user: any) => user.username === username)) {
+            userExists = true;
         }
     }
-    if(giftBoxUserExists) {
-        results.push("Gift Box user already exists.");
+    if(userExists) {
+        results.push(`Gift Box user '${username}' already exists.`);
     } else {
         const newGiftBoxUserRef = push(giftBoxUsersRef);
         const giftBoxUser = {
@@ -389,7 +400,7 @@ export async function createMasterAccount(prevState: any, formData: FormData) {
     const uraTradeUserRef = databaseRef(uraTradeDb, `users/${username}`);
     const uraTradeSnapshot = await get(uraTradeUserRef);
     if(uraTradeSnapshot.exists()){
-        results.push("URA Trade account already exists.");
+        results.push(`URA Trade account '${username}' already exists.`);
     } else {
         const uraTradeAccount = {
             "Chat Name ": chatName,
@@ -613,3 +624,6 @@ export async function unbanAccount(prevState: any, formData: FormData) {
   revalidatePath("/danger-zone");
   return { type: "success", message: "Unban process completed.", details: results };
 }
+
+
+    
