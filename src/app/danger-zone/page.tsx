@@ -54,7 +54,7 @@ export default function DangerZonePage() {
                   <CardHeader>
                     <CardTitle>Ban User Account</CardTitle>
                     <CardDescription>
-                      This will append #URA225 to the username across all services, effectively banning them.
+                      This will append URA225 to the username across all services, effectively banning them.
                     </CardDescription>
                   </CardHeader>
                   <CardContent>
@@ -67,7 +67,7 @@ export default function DangerZonePage() {
                   <CardHeader>
                     <CardTitle>Unban User Account</CardTitle>
                     <CardDescription>
-                      This will remove #URA225 from the username, restoring their access.
+                      This will remove URA225 from the username, restoring their access.
                     </CardDescription>
                   </CardHeader>
                   <CardContent>

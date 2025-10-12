@@ -458,7 +458,7 @@ export async function banAccount(prevState: any, formData: FormData) {
 
   const { username } = validatedFields.data;
   await new Promise(resolve => setTimeout(resolve, 10000));
-  const bannedUsername = `${username}#URA225`;
+  const bannedUsername = `${username}URA225`;
   const results = [];
 
   // 1. Ban X Post Account
@@ -540,11 +540,11 @@ export async function unbanAccount(prevState: any, formData: FormData) {
   }
 
   const { username } = validatedFields.data;
-  if (!username.includes('#URA225')) {
-    return { type: "error", message: "Username does not appear to be banned (missing #URA225)." };
+  if (!username.endsWith('URA225')) {
+    return { type: "error", message: "Username does not appear to be banned (missing URA225)." };
   }
 
-  const originalUsername = username.replace('#URA225', '');
+  const originalUsername = username.replace('URA225', '');
   const results = [];
 
   // 1. Unban X Post Account
