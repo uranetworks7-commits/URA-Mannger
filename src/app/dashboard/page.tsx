@@ -19,6 +19,7 @@ import { CreateChatAccountForm } from "@/components/create-chat-account-form"
 import { CreateGunFightUserForm } from "@/components/create-gun-fight-user-form"
 import { CreateGiftBoxUserForm } from "@/components/create-gift-box-user-form"
 import { CreateUraTradeAccountForm } from "@/components/create-ura-trade-account-form"
+import { CreateMasterAccountForm } from "@/components/create-master-account-form"
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 
@@ -38,8 +39,9 @@ export default function DashboardPage() {
           <h1 className="text-4xl font-bold font-headline tracking-tight text-foreground">X Crypto Accounts</h1>
           <p className="text-muted-foreground mt-2">URA System</p>
       </div>
-      <Tabs defaultValue="x-post" orientation="vertical" className="w-full max-w-4xl flex gap-8">
+      <Tabs defaultValue="master-account" orientation="vertical" className="w-full max-w-4xl flex gap-8">
         <TabsList className="flex flex-col h-auto justify-start">
+          <TabsTrigger value="master-account" className="w-full justify-start">Master Account</TabsTrigger>
           <TabsTrigger value="x-post" className="w-full justify-start">X Post</TabsTrigger>
           <TabsTrigger value="chat" className="w-full justify-start">Chat</TabsTrigger>
           <TabsTrigger value="gun-fight" className="w-full justify-start">Gun Fight</TabsTrigger>
@@ -47,6 +49,19 @@ export default function DashboardPage() {
           <TabsTrigger value="ura-trade" className="w-full justify-start">URA Trade</TabsTrigger>
         </TabsList>
         <div className="flex-grow">
+          <TabsContent value="master-account" className="mt-0">
+            <Card>
+              <CardHeader>
+                <CardTitle>Create Master Account</CardTitle>
+                <CardDescription>
+                  Create all accounts at once with a single form.
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <CreateMasterAccountForm />
+              </CardContent>
+            </Card>
+          </TabsContent>
           <TabsContent value="x-post" className="mt-0">
             <Card>
               <CardHeader>

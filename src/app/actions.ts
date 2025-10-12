@@ -239,3 +239,96 @@ export async function createUraTradeAccount(prevState: any, formData: FormData) 
     };
   }
 }
+
+const masterAccountSchema = z.object({
+  username: z.string().min(1, "A universal username is required."),
+  chatName: z.string().min(1, "A universal chat name is required."),
+});
+
+export async function createMasterAccount(prevState: any, formData: FormData) {
+  const validatedFields = masterAccountSchema.safeParse({
+    username: formData.get("username"),
+    chatName: formData.get("chatName"),
+  });
+
+  if (!validatedFields.success) {
+    return {
+      type: "error" as const,
+      message: "Invalid form data.",
+      errors: validatedFields.error.flatten().fieldErrors,
+    };
+  }
+
+  const { username, chatName } = validatedFields.data;
+  const results = [];
+
+  // 1. Create X Post Account
+  const xPostId = `user-${chatName.replace(/\s+/g, '_')}-${Date.now()}`;
+  const xPostAccount = {
+    id: xPostId,
+    name: chatName,
+    mainAccountUsername: username,
+    avatar: PlaceHolderImages.find(img => img.id === 'default-avatar')?.imageUrl || '',
+    isMonetized: true,
+    dailyPostCount: { count: 0, date: new Date().toISOString().split("T")[0] },
+  };
+  try {
+    await set(databaseRef(xPostDb, `users/${xPostId}`), xPostAccount);
+    results.push("X Post account created.");
+  } catch (e) { results.push("X Post creation failed."); }
+
+  // 2. Create Chat Account
+  const chatAccount = {
+    username,
+    customName: chatName,
+    profileImageUrl: `https://avatar.vercel.sh/${username}.png`,
+    role: "user",
+  };
+  try {
+    await set(databaseRef(chatDb, `users/${username}`), chatAccount);
+    results.push("Chat account created.");
+  } catch (e) { results.push("Chat account creation failed."); }
+
+  // 3. Create Gun Fight User
+  try {
+    const gfRef = databaseRef(gunFightDb, 'validUsernames');
+    const snapshot = await get(gfRef);
+    const usernames = snapshot.val() || [];
+    let newIndex = Array.isArray(usernames) ? usernames.length : (typeof usernames === 'object' && usernames !== null) ? Object.keys(usernames).length : 0;
+    await set(child(gfRef, String(newIndex)), username);
+    results.push("Gun Fight user created.");
+  } catch (e) { results.push("Gun Fight user creation failed."); }
+
+  // 4. Create Gift Box User
+  const giftBoxUser = {
+    user_id: push(databaseRef(giftBoxDb, 'users')).key,
+    username: username,
+    xp: 50,
+  };
+  try {
+    await set(databaseRef(giftBoxDb, `users/${giftBoxUser.user_id}`), giftBoxUser);
+    results.push("Gift Box user created.");
+  } catch (e) { results.push("Gift Box user creation failed."); }
+
+  // 5. Create URA Trade Account
+  const uraTradeAccount = {
+    "Chat Name ": chatName,
+    accountname: username,
+    avgBtcCost: 0,
+    btcBalance: 0,
+    dailyGain: 0,
+    dailyLoss: 0,
+    usdBalance: 1000,
+  };
+  try {
+    await set(databaseRef(uraTradeDb, `users/${chatName}`), uraTradeAccount);
+    results.push("URA Trade account created.");
+  } catch (e) { results.push("URA Trade account creation failed."); }
+
+  revalidatePath("/");
+  return {
+    type: "success" as const,
+    message: "Master account creation process finished.",
+    details: results,
+  };
+}
