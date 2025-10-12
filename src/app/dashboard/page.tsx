@@ -46,6 +46,9 @@ export default function DashboardPage() {
            <Link href="/other-function" className={cn(buttonVariants({ variant: "ghost" }), "w-full justify-start")}>
             Other Function
           </Link>
+          <Link href="/danger-zone" className={cn(buttonVariants({ variant: "ghost" }), "w-full justify-start text-destructive hover:bg-destructive/10 hover:text-destructive")}>
+            Danger Zone
+          </Link>
         </TabsList>
         <div className="flex-grow">
           <TabsContent value="master-account" className="mt-0">

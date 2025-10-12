@@ -2,7 +2,7 @@
 "use server"
 
 import { z } from "zod";
-import { xPostDb, chatDb, gunFightDb, giftBoxDb, uraTradeDb, get, child, set, databaseRef, push } from "@/lib/firebase";
+import { xPostDb, chatDb, gunFightDb, giftBoxDb, uraTradeDb, get, child, set, databaseRef, push, update } from "@/lib/firebase";
 import { revalidatePath } from "next/cache";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
 
@@ -308,8 +308,22 @@ export async function createMasterAccount(prevState: any, formData: FormData) {
     dailyPostCount: { count: 0, date: new Date().toISOString().split("T")[0] },
   };
   try {
-    await set(databaseRef(xPostDb, `users/${xPostId}`), xPostAccount);
-    results.push("X Post account created successfully.");
+    const xPostUsersRef = databaseRef(xPostDb, 'users');
+    const xPostSnapshot = await get(xPostUsersRef);
+    const xPostUsers = xPostSnapshot.val();
+    let xPostUserExists = false;
+    if (xPostUsers) {
+        const existingUser = Object.values(xPostUsers).find((user: any) => user.mainAccountUsername === username);
+        if (existingUser) {
+            xPostUserExists = true;
+        }
+    }
+    if (xPostUserExists) {
+        results.push("X Post account already exists.");
+    } else {
+        await set(databaseRef(xPostDb, `users/${xPostId}`), xPostAccount);
+        results.push("X Post account created successfully.");
+    }
   } catch (e) { results.push("X Post creation failed."); }
 
   // 2. Create Chat Account
@@ -399,6 +413,203 @@ export async function createMasterAccount(prevState: any, formData: FormData) {
   };
 }
 
-    
+const banUnbanSchema = z.object({
+  username: z.string().min(1, "Username is required."),
+  chatName: z.string().min(1, "Chat name is required."),
+});
 
-    
+async function findUserKey(db: any, path: string, username: string, usernameField: string = 'username'): Promise<string | null> {
+    const ref = databaseRef(db, path);
+    const snapshot = await get(ref);
+    if (snapshot.exists()) {
+        const data = snapshot.val();
+        for (const key in data) {
+            if (data[key][usernameField] === username) {
+                return key;
+            }
+        }
+    }
+    return null;
+}
+
+async function findGunFightUserKey(db: any, path: string, username: string): Promise<string | null> {
+    const ref = databaseRef(db, path);
+    const snapshot = await get(ref);
+    if (snapshot.exists()) {
+        const data = snapshot.val();
+        for (const key in data) {
+            if (data[key] === username) {
+                return key;
+            }
+        }
+    }
+    return null;
+}
+
+export async function banAccount(prevState: any, formData: FormData) {
+  const validatedFields = banUnbanSchema.safeParse({
+    username: formData.get("username"),
+    chatName: formData.get("chatName"),
+  });
+
+  if (!validatedFields.success) {
+    return { type: "error", message: "Invalid form data.", errors: validatedFields.error.flatten().fieldErrors };
+  }
+
+  const { username } = validatedFields.data;
+  await new Promise(resolve => setTimeout(resolve, 10000));
+  const bannedUsername = `${username}#URA225`;
+  const results = [];
+
+  // 1. Ban X Post Account
+  try {
+    const userKey = await findUserKey(xPostDb, 'users', username, 'mainAccountUsername');
+    if (userKey) {
+        await update(databaseRef(xPostDb, `users/${userKey}`), { mainAccountUsername: bannedUsername });
+        results.push("X Post account banned.");
+    } else {
+        results.push("X Post account not found.");
+    }
+  } catch(e: any) { results.push(`Banning X Post account failed: ${e.message}`); }
+
+  // 2. Ban Chat Account
+  try {
+    const userRef = databaseRef(chatDb, `users/${username}`);
+    const snapshot = await get(userRef);
+    if (snapshot.exists()) {
+        const userData = snapshot.val();
+        const newRef = databaseRef(chatDb, `users/${bannedUsername}`);
+        await set(newRef, { ...userData, username: bannedUsername });
+        await set(userRef, null); // Remove old record
+        results.push("Chat account banned.");
+    } else {
+        results.push("Chat account not found.");
+    }
+  } catch(e: any) { results.push(`Banning Chat account failed: ${e.message}`); }
+
+  // 3. Ban Gun Fight User
+  try {
+    const userKey = await findGunFightUserKey(gunFightDb, 'validUsernames', username);
+    if (userKey) {
+        await set(databaseRef(gunFightDb, `validUsernames/${userKey}`), bannedUsername);
+        results.push("Gun Fight user banned.");
+    } else {
+        results.push("Gun Fight user not found.");
+    }
+  } catch(e: any) { results.push(`Banning Gun Fight user failed: ${e.message}`); }
+
+  // 4. Ban Gift Box User
+  try {
+    const userKey = await findUserKey(giftBoxDb, 'users', username);
+    if (userKey) {
+        await update(databaseRef(giftBoxDb, `users/${userKey}`), { username: bannedUsername });
+        results.push("Gift Box user banned.");
+    } else {
+        results.push("Gift Box user not found.");
+    }
+  } catch(e: any) { results.push(`Banning Gift Box user failed: ${e.message}`); }
+
+  // 5. Ban URA Trade Account
+  try {
+    const userRef = databaseRef(uraTradeDb, `users/${username}`);
+    const snapshot = await get(userRef);
+    if (snapshot.exists()) {
+        const userData = snapshot.val();
+        const newRef = databaseRef(uraTradeDb, `users/${bannedUsername}`);
+        await set(newRef, { ...userData, accountname: bannedUsername });
+        await set(userRef, null); // Remove old record
+        results.push("URA Trade account banned.");
+    } else {
+        results.push("URA Trade account not found.");
+    }
+  } catch(e: any) { results.push(`Banning URA Trade account failed: ${e.message}`); }
+
+  revalidatePath("/danger-zone");
+  return { type: "success", message: "Ban process completed.", details: results };
+}
+
+
+export async function unbanAccount(prevState: any, formData: FormData) {
+  const validatedFields = banUnbanSchema.safeParse({
+    username: formData.get("username"),
+    chatName: formData.get("chatName"),
+  });
+
+  if (!validatedFields.success) {
+    return { type: "error", message: "Invalid form data.", errors: validatedFields.error.flatten().fieldErrors };
+  }
+
+  const { username } = validatedFields.data;
+  if (!username.includes('#URA225')) {
+    return { type: "error", message: "Username does not appear to be banned (missing #URA225)." };
+  }
+
+  const originalUsername = username.replace('#URA225', '');
+  const results = [];
+
+  // 1. Unban X Post Account
+  try {
+    const userKey = await findUserKey(xPostDb, 'users', username, 'mainAccountUsername');
+    if (userKey) {
+        await update(databaseRef(xPostDb, `users/${userKey}`), { mainAccountUsername: originalUsername });
+        results.push("X Post account unbanned.");
+    } else {
+        results.push("Banned X Post account not found.");
+    }
+  } catch(e: any) { results.push(`Unbanning X Post account failed: ${e.message}`); }
+  
+  // 2. Unban Chat Account
+  try {
+    const userRef = databaseRef(chatDb, `users/${username}`);
+    const snapshot = await get(userRef);
+    if (snapshot.exists()) {
+        const userData = snapshot.val();
+        const newRef = databaseRef(chatDb, `users/${originalUsername}`);
+        await set(newRef, { ...userData, username: originalUsername });
+        await set(userRef, null);
+        results.push("Chat account unbanned.");
+    } else {
+        results.push("Banned Chat account not found.");
+    }
+  } catch(e: any) { results.push(`Unbanning Chat account failed: ${e.message}`); }
+
+  // 3. Unban Gun Fight User
+  try {
+    const userKey = await findGunFightUserKey(gunFightDb, 'validUsernames', username);
+    if (userKey) {
+        await set(databaseRef(gunFightDb, `validUsernames/${userKey}`), originalUsername);
+        results.push("Gun Fight user unbanned.");
+    } else {
+        results.push("Banned Gun Fight user not found.");
+    }
+  } catch(e: any) { results.push(`Unbanning Gun Fight user failed: ${e.message}`); }
+
+  // 4. Unban Gift Box User
+  try {
+    const userKey = await findUserKey(giftBoxDb, 'users', username);
+    if (userKey) {
+        await update(databaseRef(giftBoxDb, `users/${userKey}`), { username: originalUsername });
+        results.push("Gift Box user unbanned.");
+    } else {
+        results.push("Banned Gift Box user not found.");
+    }
+  } catch(e: any) { results.push(`Unbanning Gift Box user failed: ${e.message}`); }
+
+  // 5. Unban URA Trade Account
+  try {
+    const userRef = databaseRef(uraTradeDb, `users/${username}`);
+    const snapshot = await get(userRef);
+    if (snapshot.exists()) {
+        const userData = snapshot.val();
+        const newRef = databaseRef(uraTradeDb, `users/${originalUsername}`);
+        await set(newRef, { ...userData, accountname: originalUsername });
+        await set(userRef, null);
+        results.push("URA Trade account unbanned.");
+    } else {
+        results.push("Banned URA Trade account not found.");
+    }
+  } catch(e: any) { results.push(`Unbanning URA Trade account failed: ${e.message}`); }
+
+  revalidatePath("/danger-zone");
+  return { type: "success", message: "Unban process completed.", details: results };
+}

@@ -1,6 +1,6 @@
 
 import { initializeApp, getApp, getApps } from "firebase/app";
-import { getDatabase, push, ref as databaseRef, set, get, child } from "firebase/database";
+import { getDatabase, push, ref as databaseRef, set, get, child, update } from "firebase/database";
 
 const xPostFirebaseConfig = {
   apiKey: "AIzaSyA5FgwyJpsNBTpK6hU0TuJni0duOdULI5M",
@@ -113,4 +113,4 @@ const withdrawalDb = getDatabase(withdrawalApp);
 
 
 export { xPostApp, xPostDb, chatApp, chatDb, gunFightApp, gunFightDb, giftBoxApp, giftBoxDb, uraTradeApp, uraTradeDb, mailApp, mailDb, redeemRequestApp, redeemRequestDb, withdrawalApp, withdrawalDb };
-export { push, databaseRef, set, get, child };
+export { push, databaseRef, set, get, child, update };
