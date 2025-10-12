@@ -59,79 +59,81 @@ export default function DashboardPage() {
             </Card>
           </TabsContent>
           <TabsContent value="manual" className="mt-0">
-            <Tabs defaultValue="x-post" className="w-full">
-              <TabsList>
-                <TabsTrigger value="x-post">X Post</TabsTrigger>
-                <TabsTrigger value="chat">Chat</TabsTrigger>
-                <TabsTrigger value="gun-fight">Gun Fight</TabsTrigger>
-                <TabsTrigger value="gift-box">Gift Box</TabsTrigger>
-                <TabsTrigger value="ura-trade">URA Trade</TabsTrigger>
+            <Tabs defaultValue="x-post" orientation="vertical" className="w-full flex gap-8">
+              <TabsList className="flex flex-col h-auto justify-start">
+                <TabsTrigger value="x-post" className="w-full justify-start">X Post</TabsTrigger>
+                <TabsTrigger value="chat" className="w-full justify-start">Chat</TabsTrigger>
+                <TabsTrigger value="gun-fight" className="w-full justify-start">Gun Fight</TabsTrigger>
+                <TabsTrigger value="gift-box" className="w-full justify-start">Gift Box</TabsTrigger>
+                <TabsTrigger value="ura-trade" className="w-full justify-start">URA Trade</TabsTrigger>
               </TabsList>
-              <TabsContent value="x-post">
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Create X Post Account</CardTitle>
-                    <CardDescription>
-                      Enter details to create a new X Post account.
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <CreateXPostAccountForm />
-                  </CardContent>
-                </Card>
-              </TabsContent>
-              <TabsContent value="chat">
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Create Chat Account</CardTitle>
-                    <CardDescription>
-                      Enter details for your new Chat account.
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <CreateChatAccountForm />
-                  </CardContent>
-                </Card>
-              </TabsContent>
-              <TabsContent value="gun-fight">
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Create Gun Fight User</CardTitle>
-                    <CardDescription>
-                      Enter a username to create a new Gun Fight user.
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <CreateGunFightUserForm />
-                  </CardContent>
-                </Card>
-              </TabsContent>
-              <TabsContent value="gift-box">
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Create Gift Box User</CardTitle>
-                    <CardDescription>
-                      Enter a username to create a new Gift Box user.
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <CreateGiftBoxUserForm />
-                  </CardContent>
-                </Card>
-              </TabsContent>
-              <TabsContent value="ura-trade">
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Create URA Trade Account</CardTitle>
-                    <CardDescription>
-                      Enter details to create a new URA Trade account.
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <CreateUraTradeAccountForm />
-                  </CardContent>
-                </Card>
-              </TabsContent>
+              <div className="flex-grow">
+                <TabsContent value="x-post" className="mt-0">
+                  <Card>
+                    <CardHeader>
+                      <CardTitle>Create X Post Account</CardTitle>
+                      <CardDescription>
+                        Enter details to create a new X Post account.
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <CreateXPostAccountForm />
+                    </CardContent>
+                  </Card>
+                </TabsContent>
+                <TabsContent value="chat" className="mt-0">
+                  <Card>
+                    <CardHeader>
+                      <CardTitle>Create Chat Account</CardTitle>
+                      <CardDescription>
+                        Enter details for your new Chat account.
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <CreateChatAccountForm />
+                    </CardContent>
+                  </Card>
+                </TabsContent>
+                <TabsContent value="gun-fight" className="mt-0">
+                  <Card>
+                    <CardHeader>
+                      <CardTitle>Create Gun Fight User</CardTitle>
+                      <CardDescription>
+                        Enter a username to create a new Gun Fight user.
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <CreateGunFightUserForm />
+                    </CardContent>
+                  </Card>
+                </TabsContent>
+                <TabsContent value="gift-box" className="mt-0">
+                  <Card>
+                    <CardHeader>
+                      <CardTitle>Create Gift Box User</CardTitle>
+                      <CardDescription>
+                        Enter a username to create a new Gift Box user.
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <CreateGiftBoxUserForm />
+                    </CardContent>
+                  </Card>
+                </TabsContent>
+                <TabsContent value="ura-trade" className="mt-0">
+                  <Card>
+                    <CardHeader>
+                      <CardTitle>Create URA Trade Account</CardTitle>
+                      <CardDescription>
+                        Enter details to create a new URA Trade account.
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <CreateUraTradeAccountForm />
+                    </CardContent>
+                  </Card>
+                </TabsContent>
+              </div>
             </Tabs>
           </TabsContent>
         </div>
