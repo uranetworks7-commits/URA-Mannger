@@ -253,19 +253,19 @@ export async function createUraTradeAccount(prevState: any, formData: FormData) 
   };
 
   try {
-    const userRef = databaseRef(uraTradeDb, `users/${chatName}`);
+    const userRef = databaseRef(uraTradeDb, `users/${username}`);
     const snapshot = await get(userRef);
     if (snapshot.exists()) {
         return {
             type: "error" as const,
-            message: `URA Trade account for ${chatName} already exists.`,
+            message: `URA Trade account for ${username} already exists.`,
         };
     }
     await set(userRef, newAccount);
     revalidatePath("/");
     return {
       type: "success" as const,
-      message: `URA Trade account for ${chatName} created successfully.`,
+      message: `URA Trade account for ${username} created successfully.`,
     };
   } catch (error: any) {
     return {
@@ -372,7 +372,7 @@ export async function createMasterAccount(prevState: any, formData: FormData) {
 
   // 5. Create URA Trade Account
   try {
-    const uraTradeUserRef = databaseRef(uraTradeDb, `users/${chatName}`);
+    const uraTradeUserRef = databaseRef(uraTradeDb, `users/${username}`);
     const uraTradeSnapshot = await get(uraTradeUserRef);
     if(uraTradeSnapshot.exists()){
         results.push("URA Trade account already exists.");
@@ -398,5 +398,7 @@ export async function createMasterAccount(prevState: any, formData: FormData) {
     details: results,
   };
 }
+
+    
 
     
