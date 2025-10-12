@@ -34,20 +34,20 @@ export default function DashboardPage() {
 
   return (
     <main className="flex min-h-screen w-full flex-col items-center justify-center bg-background p-4">
-      <div className="w-full max-w-md">
-        <div className="text-center mb-8">
-            <h1 className="text-4xl font-bold font-headline tracking-tight text-foreground">X Crypto Accounts</h1>
-            <p className="text-muted-foreground mt-2">URA System</p>
-        </div>
-        <Tabs defaultValue="x-post" className="w-full">
-          <TabsList className="grid w-full grid-cols-5">
-            <TabsTrigger value="x-post">X Post</TabsTrigger>
-            <TabsTrigger value="chat">Chat</TabsTrigger>
-            <TabsTrigger value="gun-fight">Gun Fight</TabsTrigger>
-            <TabsTrigger value="gift-box">Gift Box</TabsTrigger>
-            <TabsTrigger value="ura-trade">URA Trade</TabsTrigger>
-          </TabsList>
-          <TabsContent value="x-post">
+      <div className="text-center mb-8">
+          <h1 className="text-4xl font-bold font-headline tracking-tight text-foreground">X Crypto Accounts</h1>
+          <p className="text-muted-foreground mt-2">URA System</p>
+      </div>
+      <Tabs defaultValue="x-post" orientation="vertical" className="w-full max-w-4xl flex gap-8">
+        <TabsList className="flex flex-col h-auto justify-start">
+          <TabsTrigger value="x-post" className="w-full justify-start">X Post</TabsTrigger>
+          <TabsTrigger value="chat" className="w-full justify-start">Chat</TabsTrigger>
+          <TabsTrigger value="gun-fight" className="w-full justify-start">Gun Fight</TabsTrigger>
+          <TabsTrigger value="gift-box" className="w-full justify-start">Gift Box</TabsTrigger>
+          <TabsTrigger value="ura-trade" className="w-full justify-start">URA Trade</TabsTrigger>
+        </TabsList>
+        <div className="flex-grow">
+          <TabsContent value="x-post" className="mt-0">
             <Card>
               <CardHeader>
                 <CardTitle>Create X Post Account</CardTitle>
@@ -60,7 +60,7 @@ export default function DashboardPage() {
               </CardContent>
             </Card>
           </TabsContent>
-          <TabsContent value="chat">
+          <TabsContent value="chat" className="mt-0">
             <Card>
               <CardHeader>
                 <CardTitle>Create Chat Account</CardTitle>
@@ -73,7 +73,7 @@ export default function DashboardPage() {
               </CardContent>
             </Card>
           </TabsContent>
-          <TabsContent value="gun-fight">
+          <TabsContent value="gun-fight" className="mt-0">
             <Card>
               <CardHeader>
                 <CardTitle>Create Gun Fight User</CardTitle>
@@ -86,7 +86,7 @@ export default function DashboardPage() {
               </CardContent>
             </Card>
           </TabsContent>
-          <TabsContent value="gift-box">
+          <TabsContent value="gift-box" className="mt-0">
             <Card>
               <CardHeader>
                 <CardTitle>Create Gift Box User</CardTitle>
@@ -99,7 +99,7 @@ export default function DashboardPage() {
               </CardContent>
             </Card>
           </TabsContent>
-           <TabsContent value="ura-trade">
+           <TabsContent value="ura-trade" className="mt-0">
             <Card>
               <CardHeader>
                 <CardTitle>Create URA Trade Account</CardTitle>
@@ -112,8 +112,8 @@ export default function DashboardPage() {
               </CardContent>
             </Card>
           </TabsContent>
-        </Tabs>
-      </div>
+        </div>
+      </Tabs>
     </main>
   );
 }
