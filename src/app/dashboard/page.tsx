@@ -15,7 +15,6 @@ import {
   TabsTrigger,
 } from "@/components/ui/tabs"
 import { CreateXPostAccountForm } from "@/components/create-x-post-account-form"
-import { CreateBitcoinAccountForm } from "@/components/create-bitcoin-account-form"
 import { CreateChatAccountForm } from "@/components/create-chat-account-form"
 import { CreateGunFightUserForm } from "@/components/create-gun-fight-user-form"
 import { CreateGiftBoxUserForm } from "@/components/create-gift-box-user-form"
@@ -40,9 +39,8 @@ export default function DashboardPage() {
             <p className="text-muted-foreground mt-2">URA System</p>
         </div>
         <Tabs defaultValue="x-post" className="w-full">
-          <TabsList className="grid w-full grid-cols-5">
+          <TabsList className="grid w-full grid-cols-4">
             <TabsTrigger value="x-post">X Post</TabsTrigger>
-            <TabsTrigger value="bitcoin">Bitcoin</TabsTrigger>
             <TabsTrigger value="chat">Chat</TabsTrigger>
             <TabsTrigger value="gun-fight">Gun Fight</TabsTrigger>
             <TabsTrigger value="gift-box">Gift Box</TabsTrigger>
@@ -57,19 +55,6 @@ export default function DashboardPage() {
               </CardHeader>
               <CardContent>
                 <CreateXPostAccountForm />
-              </CardContent>
-            </Card>
-          </TabsContent>
-          <TabsContent value="bitcoin">
-            <Card>
-              <CardHeader>
-                <CardTitle>Create Bitcoin Account</CardTitle>
-                <CardDescription>
-                  Enter details for your new Bitcoin account.
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <CreateBitcoinAccountForm />
               </CardContent>
             </Card>
           </TabsContent>

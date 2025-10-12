@@ -2,7 +2,7 @@
 "use server"
 
 import { z } from "zod";
-import { xPostDb, bitcoinDb, chatDb, gunFightDb, giftBoxDb, get, child, set, databaseRef, push } from "@/lib/firebase";
+import { xPostDb, chatDb, gunFightDb, giftBoxDb, get, child, set, databaseRef, push } from "@/lib/firebase";
 import { revalidatePath } from "next/cache";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
 
@@ -56,57 +56,6 @@ export async function createXPostAccount(prevState: any, formData: FormData) {
       message: "Failed to create account in Firebase.",
     };
   }
-}
-
-const bitcoinSchema = z.object({
-    accountName: z.string().min(1, "Account name is required."),
-    chatName: z.string().min(1, "Chat name is required."),
-});
-
-export async function createBitcoinAccount(prevState: any, formData: FormData) {
-    const validatedFields = bitcoinSchema.safeParse({
-        accountName: formData.get("accountName"),
-        chatName: formData.get("chatName"),
-    });
-
-    if (!validatedFields.success) {
-        return {
-            type: "error" as const,
-            message: "Invalid form data.",
-            errors: validatedFields.error.flatten().fieldErrors,
-        };
-    }
-    
-    const { accountName, chatName } = validatedFields.data;
-    const key = accountName.replace(/[\.\#\$\[\]\/]/g, "_");
-
-    const newAccount = {
-        "Chat Name": chatName,
-        accountname: accountName,
-        avgBtcCost: 66189.34,
-        balance: 10000000,
-        btcBalance: 0.00001536,
-        dailyGain: 0,
-        dailyLoss: 0,
-        lastClaim: new Date().toISOString(),
-        lastPrice: 71582.28,
-        todaysPL: 0,
-        usdBalance: 1000,
-    };
-
-    try {
-        await set(databaseRef(bitcoinDb, `Users/${key}`), newAccount);
-        revalidatePath("/");
-        return {
-            type: "success" as const,
-            message: `Bitcoin account "${accountName}" for user "${chatName}" created successfully.`,
-        };
-    } catch (error) {
-        return {
-            type: "error" as const,
-            message: "Failed to create account in Firebase.",
-        };
-    }
 }
 
 const chatAccountSchema = z.object({

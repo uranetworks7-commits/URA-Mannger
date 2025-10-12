@@ -11,16 +11,6 @@ const xPostFirebaseConfig = {
   appId: "1:772396412620:web:9b4664b473abc075e69c69"
 };
 
-const bitcoinFirebaseConfig = {
-  apiKey: "AIzaSyBpvng4Am-rhTPwSvWKxAGN2WCqBwsoAaM",
-  authDomain: "bitcoin-fa4b2.firebaseapp.com",
-  databaseURL: "https://bitcoin-fa4b2-default-rtdb.firebaseio.com",
-  projectId: "bitcoin-fa4b2",
-  storageBucket: "bitcoin-fa4b2.appspot.com",
-  messagingSenderId: "311271969444",
-  appId: "1:311271969444:web:7fb50ae0439b9bde600c31"
-};
-
 const chatFirebaseConfig = {
   apiKey: "AIzaSyArPQVGOR1gMWOiGVHVd0XkKFKRVMdWEcU",
   authDomain: "advanced-pri-wol-f66.firebaseapp.com",
@@ -61,18 +51,16 @@ function initializeFirebaseApp(config: object, appName: string) {
 }
 
 const xPostApp = initializeFirebaseApp(xPostFirebaseConfig, "xPostApp");
-const bitcoinApp = initializeFirebaseApp(bitcoinFirebaseConfig, "bitcoinApp");
 const chatApp = initializeFirebaseApp(chatFirebaseConfig, "chatApp");
 const gunFightApp = initializeFirebaseApp(gunFightFirebaseConfig, "gunFightApp");
 const giftBoxApp = initializeFirebaseApp(giftBoxFirebaseConfig, "giftBoxApp");
 
 
 const xPostDb = getDatabase(xPostApp);
-const bitcoinDb = getDatabase(bitcoinApp);
 const chatDb = getDatabase(chatApp);
 const gunFightDb = getDatabase(gunFightApp);
 const giftBoxDb = getDatabase(giftBoxApp);
 
 
-export { xPostApp, xPostDb, bitcoinApp, bitcoinDb, chatApp, chatDb, gunFightApp, gunFightDb, giftBoxApp, giftBoxDb };
+export { xPostApp, xPostDb, chatApp, chatDb, gunFightApp, gunFightDb, giftBoxApp, giftBoxDb };
 export { push, databaseRef, set, get, child };
