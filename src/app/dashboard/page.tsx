@@ -34,7 +34,7 @@ export default function DashboardPage() {
   return (
     <main className="flex min-h-screen w-full flex-col items-center justify-center bg-background p-4">
       <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold font-headline tracking-tight text-foreground">X Crypto Accounts</h1>
+          <h1 className="text-4xl font-bold font-headline tracking-tight text-foreground">URA Manager</h1>
           <p className="text-muted-foreground mt-2">URA System</p>
       </div>
       <Tabs defaultValue="master-account" orientation="vertical" className="w-full max-w-5xl flex gap-8">
@@ -46,7 +46,7 @@ export default function DashboardPage() {
            <Link href="/other-function" className={cn(buttonVariants({ variant: "ghost" }), "w-full justify-start")}>
             Other Function
           </Link>
-          <Link href="/danger-zone" className={cn(buttonVariants({ variant: "ghost" }), "w-full justify-start text-destructive hover:bg-destructive/10 hover:text-destructive")}>
+          <Link href="/danger-zone" className={cn(buttonVariants({ variant: "ghost" }), "w-full justify-start text-green-500 hover:bg-green-500/10 hover:text-green-600")}>
             Danger Zone
           </Link>
         </TabsList>
