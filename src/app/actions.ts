@@ -89,7 +89,15 @@ export async function createChatAccount(prevState: any, formData: FormData) {
   };
 
   try {
-    await set(databaseRef(chatDb, `users/${username}`), newAccount);
+    const userRef = databaseRef(chatDb, `users/${username}`);
+    const snapshot = await get(userRef);
+    if (snapshot.exists()) {
+      return {
+        type: "error" as const,
+        message: `Chat account for ${username} already exists.`,
+      };
+    }
+    await set(userRef, newAccount);
     revalidatePath("/");
     return {
       type: "success" as const,
@@ -126,6 +134,13 @@ export async function createGunFightUser(prevState: any, formData: FormData) {
         const validUsernamesRef = databaseRef(gunFightDb, 'validUsernames');
         const snapshot = await get(validUsernamesRef);
         const usernames = snapshot.val() || [];
+
+        if (Object.values(usernames).includes(username)) {
+            return {
+                type: "error" as const,
+                message: `Gun Fight user "${username}" already exists.`,
+            };
+        }
         
         let newIndex = 0;
         if (Array.isArray(usernames)) {
@@ -171,6 +186,18 @@ export async function createGiftBoxUser(prevState: any, formData: FormData) {
 
     try {
         const usersRef = databaseRef(giftBoxDb, 'users');
+        const snapshot = await get(usersRef);
+        const users = snapshot.val();
+        if (users) {
+            const existingUser = Object.values(users).find((user: any) => user.username === username);
+            if (existingUser) {
+                return {
+                    type: "error" as const,
+                    message: `Gift Box user "${username}" already exists.`,
+                };
+            }
+        }
+        
         const newUserRef = push(usersRef);
         const userId = newUserRef.key;
 
@@ -226,7 +253,15 @@ export async function createUraTradeAccount(prevState: any, formData: FormData) 
   };
 
   try {
-    await set(databaseRef(uraTradeDb, `users/${chatName}`), newAccount);
+    const userRef = databaseRef(uraTradeDb, `users/${chatName}`);
+    const snapshot = await get(userRef);
+    if (snapshot.exists()) {
+        return {
+            type: "error" as const,
+            message: `URA Trade account for ${chatName} already exists.`,
+        };
+    }
+    await set(userRef, newAccount);
     revalidatePath("/");
     return {
       type: "success" as const,
@@ -262,7 +297,7 @@ export async function createMasterAccount(prevState: any, formData: FormData) {
   const { username, chatName } = validatedFields.data;
   const results = [];
 
-  // 1. Create X Post Account
+  // 1. Create X Post Account - Assuming no easy check for existence, create new one.
   const xPostId = `user-${chatName.replace(/\s+/g, '_')}-${Date.now()}`;
   const xPostAccount = {
     id: xPostId,
@@ -274,19 +309,25 @@ export async function createMasterAccount(prevState: any, formData: FormData) {
   };
   try {
     await set(databaseRef(xPostDb, `users/${xPostId}`), xPostAccount);
-    results.push("X Post account created.");
+    results.push("X Post account created successfully.");
   } catch (e) { results.push("X Post creation failed."); }
 
   // 2. Create Chat Account
-  const chatAccount = {
-    username,
-    customName: chatName,
-    profileImageUrl: `https://avatar.vercel.sh/${username}.png`,
-    role: "user",
-  };
   try {
-    await set(databaseRef(chatDb, `users/${username}`), chatAccount);
-    results.push("Chat account created.");
+    const chatUserRef = databaseRef(chatDb, `users/${username}`);
+    const chatSnapshot = await get(chatUserRef);
+    if (chatSnapshot.exists()) {
+      results.push("Chat account already exists.");
+    } else {
+      const chatAccount = {
+        username,
+        customName: chatName,
+        profileImageUrl: `https://avatar.vercel.sh/${username}.png`,
+        role: "user",
+      };
+      await set(chatUserRef, chatAccount);
+      results.push("Chat account created successfully.");
+    }
   } catch (e) { results.push("Chat account creation failed."); }
 
   // 3. Create Gun Fight User
@@ -294,35 +335,60 @@ export async function createMasterAccount(prevState: any, formData: FormData) {
     const gfRef = databaseRef(gunFightDb, 'validUsernames');
     const snapshot = await get(gfRef);
     const usernames = snapshot.val() || [];
-    let newIndex = Array.isArray(usernames) ? usernames.length : (typeof usernames === 'object' && usernames !== null) ? Object.keys(usernames).length : 0;
-    await set(child(gfRef, String(newIndex)), username);
-    results.push("Gun Fight user created.");
+     if (Object.values(usernames).includes(username)) {
+        results.push("Gun Fight user already exists.");
+    } else {
+        let newIndex = Array.isArray(usernames) ? usernames.length : (typeof usernames === 'object' && usernames !== null) ? Object.keys(usernames).length : 0;
+        await set(child(gfRef, String(newIndex)), username);
+        results.push("Gun Fight user created successfully.");
+    }
   } catch (e) { results.push("Gun Fight user creation failed."); }
 
   // 4. Create Gift Box User
-  const giftBoxUser = {
-    user_id: push(databaseRef(giftBoxDb, 'users')).key,
-    username: username,
-    xp: 50,
-  };
   try {
-    await set(databaseRef(giftBoxDb, `users/${giftBoxUser.user_id}`), giftBoxUser);
-    results.push("Gift Box user created.");
+    const giftBoxUsersRef = databaseRef(giftBoxDb, 'users');
+    const giftBoxSnapshot = await get(giftBoxUsersRef);
+    const giftBoxUsers = giftBoxSnapshot.val();
+    let giftBoxUserExists = false;
+    if (giftBoxUsers) {
+        const existingUser = Object.values(giftBoxUsers).find((user: any) => user.username === username);
+        if (existingUser) {
+            giftBoxUserExists = true;
+        }
+    }
+    if(giftBoxUserExists) {
+        results.push("Gift Box user already exists.");
+    } else {
+        const newGiftBoxUserRef = push(giftBoxUsersRef);
+        const giftBoxUser = {
+            user_id: newGiftBoxUserRef.key,
+            username: username,
+            xp: 50,
+        };
+        await set(newGiftBoxUserRef, giftBoxUser);
+        results.push("Gift Box user created successfully.");
+    }
   } catch (e) { results.push("Gift Box user creation failed."); }
 
   // 5. Create URA Trade Account
-  const uraTradeAccount = {
-    "Chat Name ": chatName,
-    accountname: username,
-    avgBtcCost: 0,
-    btcBalance: 0,
-    dailyGain: 0,
-    dailyLoss: 0,
-    usdBalance: 1000,
-  };
   try {
-    await set(databaseRef(uraTradeDb, `users/${chatName}`), uraTradeAccount);
-    results.push("URA Trade account created.");
+    const uraTradeUserRef = databaseRef(uraTradeDb, `users/${chatName}`);
+    const uraTradeSnapshot = await get(uraTradeUserRef);
+    if(uraTradeSnapshot.exists()){
+        results.push("URA Trade account already exists.");
+    } else {
+        const uraTradeAccount = {
+            "Chat Name ": chatName,
+            accountname: username,
+            avgBtcCost: 0,
+            btcBalance: 0,
+            dailyGain: 0,
+            dailyLoss: 0,
+            usdBalance: 1000,
+        };
+        await set(uraTradeUserRef, uraTradeAccount);
+        results.push("URA Trade account created successfully.");
+    }
   } catch (e) { results.push("URA Trade account creation failed."); }
 
   revalidatePath("/");
@@ -332,3 +398,5 @@ export async function createMasterAccount(prevState: any, formData: FormData) {
     details: results,
   };
 }
+
+    
