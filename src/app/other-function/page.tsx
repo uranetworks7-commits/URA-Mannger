@@ -57,7 +57,7 @@ export default function OtherFunctionPage() {
 
   return (
     <main className="flex min-h-screen w-full flex-col items-center bg-background p-4">
-      <div className="w-full max-w-4xl">
+      <div className="w-full max-w-2xl">
         <Button asChild variant="outline" className="mb-4">
           <Link href="/dashboard">Back to Dashboard</Link>
         </Button>
