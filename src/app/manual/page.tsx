@@ -20,6 +20,7 @@ import { CreateChatAccountForm } from "@/components/create-chat-account-form"
 import { CreateGunFightUserForm } from "@/components/create-gun-fight-user-form"
 import { CreateGiftBoxUserForm } from "@/components/create-gift-box-user-form"
 import { CreateUraTradeAccountForm } from "@/components/create-ura-trade-account-form"
+import { CreateMainLoginForm } from "@/components/create-main-login-form";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
@@ -55,6 +56,7 @@ export default function ManualPage() {
                 <TabsTrigger value="gun-fight" className="w-full justify-start">Gun Fight</TabsTrigger>
                 <TabsTrigger value="gift-box" className="w-full justify-start">Gift Box</TabsTrigger>
                 <TabsTrigger value="ura-trade" className="w-full justify-start">URA Trade</TabsTrigger>
+                <TabsTrigger value="main-login" className="w-full justify-start">Main Login</TabsTrigger>
               </TabsList>
               <div className="flex-grow">
                 <TabsContent value="x-post" className="mt-0">
@@ -119,6 +121,19 @@ export default function ManualPage() {
                     </CardHeader>
                     <CardContent>
                       <CreateUraTradeAccountForm />
+                    </CardContent>
+                  </Card>
+                </TabsContent>
+                 <TabsContent value="main-login" className="mt-0">
+                  <Card>
+                    <CardHeader>
+                      <CardTitle>Create Main Login User</CardTitle>
+                      <CardDescription>
+                        Enter a username and email to create a new user.
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <CreateMainLoginForm />
                     </CardContent>
                   </Card>
                 </TabsContent>

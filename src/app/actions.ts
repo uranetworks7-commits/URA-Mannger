@@ -2,7 +2,7 @@
 "use server"
 
 import { z } from "zod";
-import { xPostDb, chatDb, gunFightDb, giftBoxDb, uraTradeDb, get, child, set, databaseRef, push, update } from "@/lib/firebase";
+import { xPostDb, chatDb, gunFightDb, giftBoxDb, uraTradeDb, get, child, set, databaseRef, push, update, mainLoginDb } from "@/lib/firebase";
 import { revalidatePath } from "next/cache";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
 
@@ -626,4 +626,52 @@ export async function unbanAccount(prevState: any, formData: FormData) {
 }
 
 
+const mainLoginSchema = z.object({
+  username: z.string().min(1, "Username is required."),
+  email: z.string().email("Please enter a valid email address."),
+});
+
+export async function createMainLoginUser(prevState: any, formData: FormData) {
+  const validatedFields = mainLoginSchema.safeParse({
+    username: formData.get("username"),
+    email: formData.get("email"),
+  });
+
+  if (!validatedFields.success) {
+    return {
+      type: "error" as const,
+      message: "Invalid form data.",
+      errors: validatedFields.error.flatten().fieldErrors,
+    };
+  }
+
+  const { username, email } = validatedFields.data;
+
+  try {
+    const userRef = databaseRef(mainLoginDb, `users/${username}`);
+    const snapshot = await get(userRef);
+
+    if (snapshot.exists()) {
+      return {
+        type: "error" as const,
+        message: `User "${username}" already exists.`,
+      };
+    }
+
+    await set(userRef, {
+      email: email,
+      status: 1,
+    });
+    revalidatePath("/manual");
+    return {
+      type: "success" as const,
+      message: `User "${username}" created successfully.`,
+    };
+  } catch (error: any) {
+    return {
+      type: "error" as const,
+      message: error.message || "Failed to create user in Firebase.",
+    };
+  }
+}
     
