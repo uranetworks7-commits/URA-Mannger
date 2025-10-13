@@ -677,16 +677,18 @@ export async function createMainLoginUser(prevState: any, formData: FormData) {
 
 const masterChangeSchema = z.object({
     currentUsername: z.string().min(1, "Current username is required."),
+    newUsername: z.string().optional(),
     newChatName: z.string().optional(),
     newEmail: z.string().email("Please enter a valid email.").optional().or(z.literal('')),
-}).refine(data => data.newChatName || data.newEmail, {
-    message: "Either a new chat name or a new email must be provided.",
-    path: ["newChatName"], // Or path: ["newEmail"]
+}).refine(data => data.newUsername || data.newChatName || data.newEmail, {
+    message: "At least one new value (username, chat name, or email) must be provided.",
+    path: ["newUsername"],
 });
 
 export async function updateMasterAccount(prevState: any, formData: FormData) {
     const validatedFields = masterChangeSchema.safeParse({
         currentUsername: formData.get("currentUsername"),
+        newUsername: formData.get("newUsername"),
         newChatName: formData.get("newChatName"),
         newEmail: formData.get("newEmail"),
     });
@@ -699,18 +701,93 @@ export async function updateMasterAccount(prevState: any, formData: FormData) {
         };
     }
 
-    const { currentUsername, newChatName, newEmail } = validatedFields.data;
+    const { currentUsername, newUsername, newChatName, newEmail } = validatedFields.data;
     const results = [];
+    
+    const finalUsername = newUsername || currentUsername;
 
+    // Handle Username Change
+    if (newUsername && newUsername !== currentUsername) {
+        // 1. X Post Account
+        try {
+            const userKey = await findUserKey(xPostDb, 'users', currentUsername, 'mainAccountUsername');
+            if (userKey) {
+                await update(databaseRef(xPostDb, `users/${userKey}`), { mainAccountUsername: newUsername });
+                results.push("X Post username updated.");
+            } else { results.push("X Post account not found for username change."); }
+        } catch(e: any) { results.push(`Updating X Post username failed: ${e.message}`); }
+        
+        // 2. Chat Account
+        try {
+            const oldRef = databaseRef(chatDb, `users/${currentUsername}`);
+            const snapshot = await get(oldRef);
+            if (snapshot.exists()) {
+                const userData = snapshot.val();
+                userData.username = newUsername;
+                const newRef = databaseRef(chatDb, `users/${newUsername}`);
+                await set(newRef, userData);
+                await set(oldRef, null);
+                results.push("Chat account username updated.");
+            } else { results.push("Chat account not found for username change."); }
+        } catch(e: any) { results.push(`Updating Chat account username failed: ${e.message}`); }
+
+        // 3. Gun Fight User
+        try {
+            const userKey = await findGunFightUserKey(gunFightDb, 'validUsernames', currentUsername);
+            if (userKey) {
+                await update(databaseRef(gunFightDb, 'validUsernames'), { [userKey]: newUsername });
+                results.push("Gun Fight username updated.");
+            } else { results.push("Gun Fight user not found for username change."); }
+        } catch(e: any) { results.push(`Updating Gun Fight username failed: ${e.message}`); }
+
+        // 4. Gift Box User
+        try {
+            const userKey = await findUserKey(giftBoxDb, 'users', currentUsername);
+            if (userKey) {
+                await update(databaseRef(giftBoxDb, `users/${userKey}`), { username: newUsername });
+                results.push("Gift Box username updated.");
+            } else { results.push("Gift Box user not found for username change."); }
+        } catch(e: any) { results.push(`Updating Gift Box username failed: ${e.message}`); }
+
+        // 5. URA Trade Account
+        try {
+            const oldRef = databaseRef(uraTradeDb, `users/${currentUsername}`);
+            const snapshot = await get(oldRef);
+            if (snapshot.exists()) {
+                const userData = snapshot.val();
+                userData.accountname = newUsername;
+                const newRef = databaseRef(uraTradeDb, `users/${newUsername}`);
+                await set(newRef, userData);
+                await set(oldRef, null);
+                results.push("URA Trade username updated.");
+            } else { results.push("URA Trade account not found for username change."); }
+        } catch(e: any) { results.push(`Updating URA Trade username failed: ${e.message}`); }
+
+        // 6. Main Login User
+        try {
+            const oldRef = databaseRef(mainLoginDb, `users/${currentUsername}`);
+            const snapshot = await get(oldRef);
+            if (snapshot.exists()) {
+                const userData = snapshot.val();
+                const newRef = databaseRef(mainLoginDb, `users/${newUsername}`);
+                await set(newRef, userData);
+                await set(oldRef, null);
+                results.push("Main Login username updated.");
+            } else { results.push("Main Login user not found for username change."); }
+        } catch(e: any) { results.push(`Updating Main Login username failed: ${e.message}`); }
+    }
+
+
+    // Handle Chat Name and Email updates
     // 1. Update X Post Account
     if (newChatName) {
         try {
-            const userKey = await findUserKey(xPostDb, 'users', currentUsername, 'mainAccountUsername');
+            const userKey = await findUserKey(xPostDb, 'users', finalUsername, 'mainAccountUsername');
             if (userKey) {
                 await update(databaseRef(xPostDb, `users/${userKey}`), { name: newChatName });
                 results.push("X Post chat name updated.");
             } else {
-                results.push("X Post account not found.");
+                results.push("X Post account not found for chat name update.");
             }
         } catch(e: any) { results.push(`Updating X Post account failed: ${e.message}`); }
     }
@@ -718,13 +795,13 @@ export async function updateMasterAccount(prevState: any, formData: FormData) {
     // 2. Update Chat Account
     if (newChatName) {
         try {
-            const userRef = databaseRef(chatDb, `users/${currentUsername}`);
+            const userRef = databaseRef(chatDb, `users/${finalUsername}`);
             const snapshot = await get(userRef);
             if (snapshot.exists()) {
                 await update(userRef, { customName: newChatName });
                 results.push("Chat account name updated.");
             } else {
-                results.push("Chat account not found.");
+                results.push("Chat account not found for chat name update.");
             }
         } catch(e: any) { results.push(`Updating Chat account failed: ${e.message}`); }
     }
@@ -732,13 +809,13 @@ export async function updateMasterAccount(prevState: any, formData: FormData) {
     // 3. Update URA Trade Account
     if (newChatName) {
         try {
-            const userRef = databaseRef(uraTradeDb, `users/${currentUsername}`);
+            const userRef = databaseRef(uraTradeDb, `users/${finalUsername}`);
             const snapshot = await get(userRef);
             if (snapshot.exists()) {
                 await update(userRef, { "Chat Name ": newChatName });
                 results.push("URA Trade chat name updated.");
             } else {
-                results.push("URA Trade account not found.");
+                results.push("URA Trade account not found for chat name update.");
             }
         } catch(e: any) { results.push(`Updating URA Trade account failed: ${e.message}`); }
     }
@@ -746,13 +823,13 @@ export async function updateMasterAccount(prevState: any, formData: FormData) {
     // 4. Update Main Login Email
     if (newEmail) {
         try {
-            const userRef = databaseRef(mainLoginDb, `users/${currentUsername}`);
+            const userRef = databaseRef(mainLoginDb, `users/${finalUsername}`);
             const snapshot = await get(userRef);
             if (snapshot.exists()) {
                 await update(userRef, { email: newEmail });
                 results.push("Main Login email updated.");
             } else {
-                results.push("Main Login user not found.");
+                results.push("Main Login user not found for email update.");
             }
         } catch(e: any) { results.push(`Updating Main Login failed: ${e.message}`); }
     }
@@ -761,7 +838,7 @@ export async function updateMasterAccount(prevState: any, formData: FormData) {
     return {
         type: "success" as const,
         message: "Master account update process finished.",
-        details: results.length > 0 ? results : ["No updates were performed. Please provide a new chat name or email."],
+        details: results.length > 0 ? results : ["No updates were performed. Please provide new data to update."],
     };
 }
 

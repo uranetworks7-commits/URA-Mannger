@@ -28,11 +28,12 @@ import {
 
 const masterChangeSchema = z.object({
     currentUsername: z.string().min(1, "Current username is required."),
+    newUsername: z.string().optional(),
     newChatName: z.string().optional(),
     newEmail: z.string().email("Please enter a valid email.").optional().or(z.literal('')),
-}).refine(data => data.newChatName || data.newEmail, {
-    message: "Either a new chat name or a new email must be provided.",
-    path: ["newChatName"],
+}).refine(data => data.newUsername || data.newChatName || data.newEmail, {
+    message: "At least one new value (username, chat name, or email) must be provided.",
+    path: ["newUsername"],
 });
 
 type FormValues = z.infer<typeof masterChangeSchema>;
@@ -62,6 +63,7 @@ export function MasterChangeForm() {
     resolver: zodResolver(masterChangeSchema),
     defaultValues: {
       currentUsername: "",
+      newUsername: "",
       newChatName: "",
       newEmail: "",
     },
@@ -112,6 +114,19 @@ export function MasterChangeForm() {
               <FormLabel>Current Username</FormLabel>
               <FormControl>
                 <Input placeholder="The user's current username" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="newUsername"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>New Username (Optional)</FormLabel>
+              <FormControl>
+                <Input placeholder="The user's new username" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
