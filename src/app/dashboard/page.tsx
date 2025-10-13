@@ -21,6 +21,7 @@ import { useRouter } from "next/navigation";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { Bird } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 export default function DashboardPage() {
   const router = useRouter();
@@ -40,6 +41,11 @@ export default function DashboardPage() {
             URA Manager
           </h1>
           <p className="text-muted-foreground mt-2">URA System</p>
+      </div>
+      <div className="flex gap-4 mb-8">
+        <Button asChild>
+            <Link href="/master-change">Master Change</Link>
+        </Button>
       </div>
       <Tabs defaultValue="master-account" orientation="vertical" className="w-full max-w-5xl flex gap-8">
         <TabsList className="flex flex-col h-auto justify-start">
