@@ -678,7 +678,7 @@ export async function createMainLoginUser(prevState: any, formData: FormData) {
 const masterChangeSchema = z.object({
     currentUsername: z.string().min(1, "Current username is required."),
     newChatName: z.string().optional(),
-    newEmail: z.string().email("Please enter a valid email.").optional(),
+    newEmail: z.string().email("Please enter a valid email.").optional().or(z.literal('')),
 }).refine(data => data.newChatName || data.newEmail, {
     message: "Either a new chat name or a new email must be provided.",
     path: ["newChatName"], // Or path: ["newEmail"]
@@ -763,5 +763,107 @@ export async function updateMasterAccount(prevState: any, formData: FormData) {
         message: "Master account update process finished.",
         details: results.length > 0 ? results : ["No updates were performed. Please provide a new chat name or email."],
     };
+}
+
+const deleteMasterSchema = z.object({
+  username: z.string().min(1, "Username is required."),
+  confirmation: z.literal("delete", {
+    errorMap: () => ({ message: "You must type 'delete' to confirm." }),
+  }),
+});
+
+export async function deleteMasterAccount(prevState: any, formData: FormData) {
+  const validatedFields = deleteMasterSchema.safeParse({
+    username: formData.get("username"),
+    confirmation: formData.get("confirmation"),
+  });
+
+  if (!validatedFields.success) {
+    return {
+      type: "error" as const,
+      message: "Invalid form data.",
+      errors: validatedFields.error.flatten().fieldErrors,
+    };
+  }
+
+  const { username } = validatedFields.data;
+  const results = [];
+
+  // 1. Delete X Post Account
+  try {
+    const userKey = await findUserKey(xPostDb, 'users', username, 'mainAccountUsername');
+    if (userKey) {
+      await set(databaseRef(xPostDb, `users/${userKey}`), null);
+      results.push("X Post account deleted.");
+    } else {
+      results.push("X Post account not found.");
+    }
+  } catch (e: any) { results.push(`Deleting X Post account failed: ${e.message}`); }
+
+  // 2. Delete Chat Account
+  try {
+    const userRef = databaseRef(chatDb, `users/${username}`);
+    const snapshot = await get(userRef);
+    if (snapshot.exists()) {
+      await set(userRef, null);
+      results.push("Chat account deleted.");
+    } else {
+      results.push("Chat account not found.");
+    }
+  } catch (e: any) { results.push(`Deleting Chat account failed: ${e.message}`); }
+
+  // 3. Delete Gun Fight User
+  try {
+    const userKey = await findGunFightUserKey(gunFightDb, 'validUsernames', username);
+    if (userKey) {
+      await set(databaseRef(gunFightDb, `validUsernames/${userKey}`), null);
+      results.push("Gun Fight user deleted.");
+    } else {
+      results.push("Gun Fight user not found.");
+    }
+  } catch (e: any) { results.push(`Deleting Gun Fight user failed: ${e.message}`); }
+  
+  // 4. Delete Gift Box User
+  try {
+    const userKey = await findUserKey(giftBoxDb, 'users', username);
+    if (userKey) {
+      await set(databaseRef(giftBoxDb, `users/${userKey}`), null);
+      results.push("Gift Box user deleted.");
+    } else {
+      results.push("Gift Box user not found.");
+    }
+  } catch (e: any) { results.push(`Deleting Gift Box user failed: ${e.message}`); }
+
+  // 5. Delete URA Trade Account
+  try {
+    const userRef = databaseRef(uraTradeDb, `users/${username}`);
+    const snapshot = await get(userRef);
+    if (snapshot.exists()) {
+      await set(userRef, null);
+      results.push("URA Trade account deleted.");
+    } else {
+      results.push("URA Trade account not found.");
+    }
+  } catch (e: any) { results.push(`Deleting URA Trade account failed: ${e.message}`); }
+
+  // 6. Delete Main Login User
+  try {
+    const userRef = databaseRef(mainLoginDb, `users/${username}`);
+    const snapshot = await get(userRef);
+    if (snapshot.exists()) {
+        await set(userRef, null);
+        results.push("Main Login user deleted.");
+    } else {
+        results.push("Main Login user not found.");
+    }
+  } catch(e: any) { results.push(`Deleting Main Login failed: ${e.message}`); }
+
+
+  revalidatePath("/danger-zone");
+  return {
+    type: "success" as const,
+    message: `All accounts for user '${username}' have been processed for deletion.`,
+    details: results,
+  };
 }
     

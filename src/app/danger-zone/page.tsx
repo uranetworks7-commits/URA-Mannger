@@ -19,6 +19,7 @@ import { BanUnbanForm } from "@/components/ban-unban-form"
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
+import { DeleteMasterAccountForm } from "@/components/delete-master-account-form";
 
 export default function DangerZonePage() {
   const router = useRouter();
@@ -40,14 +41,15 @@ export default function DangerZonePage() {
           <CardHeader>
             <CardTitle className="text-destructive">Danger Zone</CardTitle>
             <CardDescription>
-              Ban or unban user accounts. These actions are critical and should be handled with care.
+              Critical actions that should be handled with extreme care.
             </CardDescription>
           </CardHeader>
           <CardContent>
             <Tabs defaultValue="ban" className="w-full">
-              <TabsList className="grid w-full grid-cols-2">
+              <TabsList className="grid w-full grid-cols-3">
                 <TabsTrigger value="ban">Ban Account</TabsTrigger>
                 <TabsTrigger value="unban">Unban Account</TabsTrigger>
+                <TabsTrigger value="delete-master">Delete Master</TabsTrigger>
               </TabsList>
               <TabsContent value="ban" className="mt-4">
                 <Card>
@@ -72,6 +74,19 @@ export default function DangerZonePage() {
                   </CardHeader>
                   <CardContent>
                     <BanUnbanForm actionType="unban" />
+                  </CardContent>
+                </Card>
+              </TabsContent>
+               <TabsContent value="delete-master" className="mt-4">
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Delete Master Account</CardTitle>
+                    <CardDescription>
+                      This will permanently delete a user and all their data from all services. This action cannot be undone.
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <DeleteMasterAccountForm />
                   </CardContent>
                 </Card>
               </TabsContent>
