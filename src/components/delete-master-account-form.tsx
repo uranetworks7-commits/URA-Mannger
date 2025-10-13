@@ -66,7 +66,7 @@ export function DeleteMasterAccountForm() {
       username: "",
       chatName: "",
       email: "",
-      confirmation: undefined,
+      confirmation: "",
     },
   });
 
