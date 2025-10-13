@@ -30,6 +30,8 @@ import { Alert, AlertDescription, AlertTitle } from "./ui/alert";
 
 const deleteMasterSchema = z.object({
   username: z.string().min(1, "Username is required."),
+  chatName: z.string().min(1, "Chat name is required."),
+  email: z.string().email("Please enter a valid email address."),
   confirmation: z.literal("delete", {
     errorMap: () => ({ message: "You must type 'delete' to confirm." }),
   }),
@@ -62,6 +64,8 @@ export function DeleteMasterAccountForm() {
     resolver: zodResolver(deleteMasterSchema),
     defaultValues: {
       username: "",
+      chatName: "",
+      email: "",
       confirmation: undefined,
     },
   });
@@ -116,6 +120,32 @@ export function DeleteMasterAccountForm() {
               <FormLabel>Username to Delete</FormLabel>
               <FormControl>
                 <Input placeholder="e.g. johndoe" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="chatName"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Chat Name</FormLabel>
+              <FormControl>
+                <Input placeholder="e.g. John Doe" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="email"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Email ID</FormLabel>
+              <FormControl>
+                <Input placeholder="e.g. user@example.com" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>

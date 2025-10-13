@@ -767,6 +767,8 @@ export async function updateMasterAccount(prevState: any, formData: FormData) {
 
 const deleteMasterSchema = z.object({
   username: z.string().min(1, "Username is required."),
+  chatName: z.string().min(1, "Chat name is required."),
+  email: z.string().email("Please enter a valid email address."),
   confirmation: z.literal("delete", {
     errorMap: () => ({ message: "You must type 'delete' to confirm." }),
   }),
@@ -775,6 +777,8 @@ const deleteMasterSchema = z.object({
 export async function deleteMasterAccount(prevState: any, formData: FormData) {
   const validatedFields = deleteMasterSchema.safeParse({
     username: formData.get("username"),
+    chatName: formData.get("chatName"),
+    email: formData.get("email"),
     confirmation: formData.get("confirmation"),
   });
 
