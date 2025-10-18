@@ -271,7 +271,7 @@ export default function OtherFunctionPage() {
                   </CardHeader>
                   <CardContent>
                     <Button asChild>
-                      <Link href="https://ura-services.netlify.app" target="_blank" rel="noopener noreferrer">
+                      <Link href="https://ura-forms.netlify.app/" target="_blank" rel="noopener noreferrer">
                         View Form
                       </Link>
                     </Button>
